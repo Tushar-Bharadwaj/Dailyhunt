@@ -3,16 +3,11 @@ package dailyhunt.internship.endpoints;
 import dailyhunt.internship.clientmodels.request.LoginForm;
 import dailyhunt.internship.clientmodels.request.SignUpForm;
 import dailyhunt.internship.clientmodels.response.JwtResponse;
-import dailyhunt.internship.entities.Role;
-import dailyhunt.internship.entities.User;
-import dailyhunt.internship.enums.RoleName;
 import dailyhunt.internship.exceptions.BadRequestException;
 import dailyhunt.internship.repositories.RoleRepository;
-import dailyhunt.internship.repositories.UserRepository;
 import dailyhunt.internship.security.jwt.JwtProvider;
 import dailyhunt.internship.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,28 +17,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping(AuthEndpoints.BASE_URL)
 public class AuthEndpoints {
+    static final String BASE_URL = "/api/v1/auth";
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    RoleRepository roleRepository;
+    private final JwtProvider jwtProvider;
 
-    @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
-    JwtProvider jwtProvider;
+    public AuthEndpoints(AuthenticationManager authenticationManager, UserService userService, JwtProvider jwtProvider) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.jwtProvider = jwtProvider;
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {

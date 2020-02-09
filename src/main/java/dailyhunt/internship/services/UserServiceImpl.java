@@ -10,11 +10,10 @@ import dailyhunt.internship.repositories.RoleRepository;
 import dailyhunt.internship.repositories.UserRepository;
 import dailyhunt.internship.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -22,16 +21,18 @@ import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
+    @Transactional
     public User findUserById(Long id) throws ResourceNotFoundException {
         Optional<User> user = userRepository.findById(id);
         if(!user.isPresent()) {
@@ -41,11 +42,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public List<User> findAllUsers() {
-        return null;
+        return userRepository.findAll();
     }
 
     @Override
+    @Transactional
     public User saveUser(SignUpForm signUpRequest) throws BadRequestException {
 
 
@@ -91,7 +94,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean deleteUser(Long userId) throws ResourceNotFoundException {
-        return null;
+    @Transactional
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 }

@@ -10,7 +10,7 @@ import java.util.Set;
 @Data
 public class SignUpForm {
     @NotBlank
-    @Size(min = 3, max = 50)
+    @Size(min = 3, max = 50, message = "Name must be atleast 3 to 50 characters long")
     private String name;
 
     @NotBlank
@@ -21,6 +21,6 @@ public class SignUpForm {
     private Set<String> role;
 
     @NotBlank
-    @Size(min = 6, max = 40)
+    @Size(min = 6, max = 40, message = "Password must be atleast 6 to 40 characters long")
     private String password;
 }

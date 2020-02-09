@@ -14,6 +14,6 @@ public interface UserService {
 
     User saveUser(SignUpForm user);
 
-    Boolean deleteUser(Long userId) throws ResourceNotFoundException;
+    void deleteUser(Long userId);
 
 }
