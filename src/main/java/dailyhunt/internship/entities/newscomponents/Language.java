@@ -1,4 +1,4 @@
-package dailyhunt.internship.entities;
+package dailyhunt.internship.entities.newscomponents;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

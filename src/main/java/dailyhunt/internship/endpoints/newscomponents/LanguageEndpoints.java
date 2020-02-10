@@ -1,7 +1,7 @@
 package dailyhunt.internship.endpoints.newscomponents;
 
 import dailyhunt.internship.clientmodels.request.NewsComponents;
-import dailyhunt.internship.entities.Language;
+import dailyhunt.internship.entities.newscomponents.Language;
 import dailyhunt.internship.exceptions.ResourceNotFoundException;
 import dailyhunt.internship.services.interfaces.LanguageService;
 import org.springframework.http.HttpStatus;

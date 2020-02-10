@@ -1,7 +1,7 @@
 package dailyhunt.internship.services;
 
 import dailyhunt.internship.clientmodels.request.NewsComponents;
-import dailyhunt.internship.entities.Language;
+import dailyhunt.internship.entities.newscomponents.Language;
 import dailyhunt.internship.exceptions.BadRequestException;
 import dailyhunt.internship.exceptions.ResourceNotFoundException;
 import dailyhunt.internship.repositories.news.components.LanguageRepository;

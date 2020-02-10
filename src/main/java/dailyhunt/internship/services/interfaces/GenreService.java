@@ -1,11 +1,10 @@
 package dailyhunt.internship.services.interfaces;
 
 import dailyhunt.internship.clientmodels.request.NewsComponents;
-import dailyhunt.internship.entities.Genre;
+import dailyhunt.internship.entities.newscomponents.Genre;
 import dailyhunt.internship.exceptions.ResourceNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface GenreService {
     Genre findGenreById(Long id) throws ResourceNotFoundException;
