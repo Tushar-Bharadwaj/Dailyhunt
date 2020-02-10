@@ -63,7 +63,12 @@ public class LocalityServiceImpl implements LocalityService {
 
     @Override
     public Boolean deleteLocality(Long localityId) throws ResourceNotFoundException {
-        return null;
+        Optional<Locality> locality = localityRepository.findById(localityId);
+        if(locality.isPresent()) {
+            localityRepository.deleteById(localityId);
+            return true;
+        }
+        throw new ResourceNotFoundException("Invalid locality selected");
     }
 
     @Override
