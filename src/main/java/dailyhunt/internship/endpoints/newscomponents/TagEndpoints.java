@@ -4,6 +4,7 @@ import dailyhunt.internship.clientmodels.request.NewsComponents;
 import dailyhunt.internship.entities.newscomponents.Tag;
 import dailyhunt.internship.exceptions.ResourceNotFoundException;
 import dailyhunt.internship.services.interfaces.TagService;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,6 @@ public class TagEndpoints {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public Tag saveTag(@Valid @RequestBody NewsComponents request) {
         return tagService.saveTags(request);

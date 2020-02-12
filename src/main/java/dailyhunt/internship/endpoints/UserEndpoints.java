@@ -2,7 +2,6 @@ package dailyhunt.internship.endpoints;
 
 
 import dailyhunt.internship.clientmodels.request.SignUpForm;
-import dailyhunt.internship.clientmodels.response.UserResponse;
 import dailyhunt.internship.exceptions.BadRequestException;
 import dailyhunt.internship.services.interfaces.UserService;
 import org.springframework.http.ResponseEntity;
