@@ -59,6 +59,9 @@ public class News {
     private Boolean approved;
     private Boolean published;
 
+    @OneToMany
+    private Set<Image> imageIds;
+
     @ManyToOne
     private User approvedBy;
 

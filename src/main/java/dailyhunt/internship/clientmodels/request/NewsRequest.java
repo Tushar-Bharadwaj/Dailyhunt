@@ -27,6 +27,8 @@ public class NewsRequest {
     @NotBlank(message = "You must have atleast 1 language")
     private List<Long> languageIds;
 
+    private List<String> imageMD5s;
+
     private Boolean draft;
 
     private Boolean published;

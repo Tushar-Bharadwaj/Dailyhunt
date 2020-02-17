@@ -1,7 +1,7 @@
 package dailyhunt.internship.services;
 
-import dailyhunt.internship.clientmodels.request.NewsComponents;
 import dailyhunt.internship.clientmodels.request.NewsRequest;
+import dailyhunt.internship.entities.Image;
 import dailyhunt.internship.entities.News;
 import dailyhunt.internship.entities.User;
 import dailyhunt.internship.entities.newscomponents.Genre;
@@ -13,30 +13,36 @@ import dailyhunt.internship.exceptions.ResourceNotFoundException;
 import dailyhunt.internship.repositories.NewsRepository;
 import dailyhunt.internship.services.interfaces.*;
 import dailyhunt.internship.util.DailyhuntUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class NewsServiceImpl implements NewsService {
+
+    private static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads/";
     private NewsRepository newsRepository;
     private TagService tagService;
     private GenreService genreService;
     private LocalityService localityService;
     private LanguageService languageService;
     private UserService userService;
-
+    private ImageService imageService;
     public NewsServiceImpl(NewsRepository newsRepository, TagService tagService,
                            GenreService genreService, LocalityService localityService, LanguageService languageService,
-    UserService userService) {
+                           UserService userService, ImageService imageService) {
         this.newsRepository = newsRepository;
         this.tagService = tagService;
         this.genreService = genreService;
         this.localityService = localityService;
         this.languageService = languageService;
         this.userService = userService;
+        this.imageService = imageService;
     }
 
     @Override
@@ -53,7 +59,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public News saveNews(NewsRequest news) {
+    public News saveNews(NewsRequest news, MultipartFile[] files) throws IOException {
+
         //Create new tags if not existing
         Set<Tag> tags = new HashSet<>();
         //Check for valid Locality, Language, Genre
@@ -71,6 +78,8 @@ public class NewsServiceImpl implements NewsService {
             throw new BadRequestException("Please Fill All Fields");
         }
 
+
+
         News createNews = News.builder()
                 .approved(false)
                 .createdAt(new Date())
@@ -86,7 +95,17 @@ public class NewsServiceImpl implements NewsService {
                 .updatedAt(new Date())
                 .user(user)
                 .build();
-        return newsRepository.save(createNews);
+
+
+        News currentNews = newsRepository.save(createNews);
+        Set<Image> images = new HashSet<>();
+        int count = 0;
+        for(MultipartFile file : files) {
+            String filePath = imageService.saveImage(file, news.getImageMD5s().get(count++));
+            //TODO : Attach the file paths to News
+        }
+        return currentNews;
+
 
     }
 
