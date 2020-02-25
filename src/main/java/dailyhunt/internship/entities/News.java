@@ -31,23 +31,23 @@ public class News {
     private String shortText;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_tags",
-            joinColumns = @JoinColumn(name = "user_id"),
+    @JoinTable(name = "news_tags",
+            joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
     @ManyToMany
-    @JoinTable(name = "user_locality",
-            joinColumns = @JoinColumn(name = "user_id"),
+    @JoinTable(name = "news_locality",
+            joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "locality_id"))
     private Set<Locality> localities;
     @ManyToMany
-    @JoinTable(name = "user_genre",
-            joinColumns = @JoinColumn(name = "user_id"),
+    @JoinTable(name = "news_genre",
+            joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private Set<Genre> genres;
     @ManyToMany
-    @JoinTable(name = "user_language",
-            joinColumns = @JoinColumn(name = "user_id"),
+    @JoinTable(name = "news_language",
+            joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id"))
     private Set<Language> language;
 
