@@ -18,4 +18,6 @@ public interface LocalityService {
     Boolean deleteLocality(Long localityId) throws ResourceNotFoundException;
 
     List<Locality> findAllById(List<Long> id);
+
+    Locality toggleActiveStatus(Long localityId);
 }

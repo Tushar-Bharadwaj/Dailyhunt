@@ -75,4 +75,12 @@ public class LanguageServiceImpl implements LanguageService {
     public List<Language> findAllById(List<Long> ids) {
         return languageRepository.findAllById(ids);
     }
+
+    @Override
+    public Language toggleActiveStatus(Long languageId) {
+        Language language = findLanguageById(languageId);
+        language.setActive(!language.getActive());
+        languageRepository.save(language);
+        return language;
+    }
 }

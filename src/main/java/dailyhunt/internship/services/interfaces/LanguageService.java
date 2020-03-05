@@ -18,5 +18,7 @@ public interface LanguageService {
     Boolean deleteLanguage(Long languageId) throws ResourceNotFoundException;
 
     List<Language> findAllById(List<Long> ids);
+
+    Language toggleActiveStatus(Long languageId);
 }
 

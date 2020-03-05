@@ -85,5 +85,13 @@ public class TagServiceImpl implements TagService {
         return null;
     }
 
+    @Override
+    public Tag toggleActiveStatus(Long tagId) {
+        Tag tag = findTagsById(tagId);
+        tag.setActive(!tag.getActive());
+        tagRepository.save(tag);
+        return tag;
+    }
+
 
 }

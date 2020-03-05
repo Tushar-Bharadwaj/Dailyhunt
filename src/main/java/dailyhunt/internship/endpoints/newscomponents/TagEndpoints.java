@@ -4,7 +4,6 @@ import dailyhunt.internship.clientmodels.request.NewsComponents;
 import dailyhunt.internship.entities.newscomponents.Tag;
 import dailyhunt.internship.exceptions.ResourceNotFoundException;
 import dailyhunt.internship.services.interfaces.TagService;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(TagEndpoints.BASE_URL)
 public class TagEndpoints {
@@ -51,6 +51,12 @@ public class TagEndpoints {
     @ResponseStatus(HttpStatus.OK)
     public Boolean deleteTag(@PathVariable Long tagId) throws ResourceNotFoundException {
         return tagService.deleteTags(tagId);
+    }
+
+    @PutMapping("/activity/{tagId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Tag activity(@PathVariable Long tagId) throws ResourceNotFoundException {
+        return tagService.toggleActiveStatus(tagId);
     }
 }
 

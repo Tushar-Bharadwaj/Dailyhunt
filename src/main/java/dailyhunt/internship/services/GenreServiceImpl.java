@@ -82,4 +82,12 @@ public class GenreServiceImpl implements GenreService {
     public List<Genre> findAllById(List<Long> ids) {
         return genreRepository.findAllById(ids);
     }
+
+    @Override
+    public Genre toggleActiveStatus(Long genreId) {
+        Genre genre = findGenreById(genreId);
+        genre.setActive(!genre.getActive());
+        genreRepository.save(genre);
+        return genre;
+    }
 }

@@ -75,4 +75,12 @@ public class LocalityServiceImpl implements LocalityService {
     public List<Locality> findAllById(List<Long> id) {
         return null;
     }
+
+    @Override
+    public Locality toggleActiveStatus(Long localityId) {
+        Locality locality = findLocalityById(localityId);
+        locality.setActive(!locality.getActive());
+        localityRepository.save(locality);
+        return locality;
+    }
 }
