@@ -58,16 +58,10 @@ public class TagServiceImpl implements TagService {
 
 
     @Override
-    public Tag updateTags(NewsComponents tags, Long tagsId) throws ResourceNotFoundException {
-        Optional<Tag> checkTag = tagRepository.findById(tagsId);
-        if(checkTag.isPresent()) {
-            if(DailyhuntUtil.isNullOrEmpty(tags.getActive()))
-                throw new BadRequestException("Please fill all fields");
-            Tag tag = checkTag.get();
-            tag.setActive(tags.getActive());
-            return tagRepository.save(tag);
-        }
-        throw new ResourceNotFoundException("Invalid Tag selected.");
+    public Tag updateTags(NewsComponents request, Long tagsId) throws ResourceNotFoundException {
+        Tag tag = findTagsById(tagsId);
+        tag.setName(request.getName());
+        return tagRepository.save(tag);
     }
 
     @Override

@@ -49,16 +49,11 @@ public class LanguageServiceImpl implements LanguageService {
     }
 
     @Override
-    public Language updateLanguage(NewsComponents language, Long languageId) throws ResourceNotFoundException {
-        Optional<Language> checkGenre = languageRepository.findById(languageId);
-        if(checkGenre.isPresent()) {
-            if(DailyhuntUtil.isNullOrEmpty(language.getActive()))
-                throw new BadRequestException("Please fill all fields");
-            Language genre = checkGenre.get();
-            genre.setActive(language.getActive());
-            return languageRepository.save(genre);
-        }
-        throw new ResourceNotFoundException("Invalid genre selected.");
+    public Language updateLanguage(NewsComponents request, Long languageId) throws ResourceNotFoundException {
+        Language language = findLanguageById(languageId);
+        language.setName(request.getName());
+        return languageRepository.save(language);
+
     }
 
     @Override

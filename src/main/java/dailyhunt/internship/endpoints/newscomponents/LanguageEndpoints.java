@@ -42,7 +42,7 @@ public class LanguageEndpoints {
     @PutMapping("/{languageId}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public Language updateLanguage(@RequestBody NewsComponents request, @PathVariable Long languageId) throws ResourceNotFoundException {
+    public Language updateLanguage(@Valid @RequestBody NewsComponents request, @PathVariable Long languageId) throws ResourceNotFoundException {
         return languageService.updateLanguage(request, languageId);
     }
 
