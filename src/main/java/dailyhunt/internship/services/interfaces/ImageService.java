@@ -6,5 +6,5 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface ImageService {
-    String saveImage(MultipartFile file, String fileMD5) throws IOException;
+    String saveImage(String base_64_string) throws IOException;
 }

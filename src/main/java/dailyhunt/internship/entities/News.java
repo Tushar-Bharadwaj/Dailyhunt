@@ -68,4 +68,5 @@ public class News {
     @ManyToOne
     private User approvedBy;
 
+    private Boolean trending;
 }

@@ -134,13 +134,14 @@ public class NewsServiceImpl implements NewsService {
                 .text(newsRequest.getText())
                 .updatedAt(new Date())
                 .user(user)
+                .trending(false)
                 .build();
 
 
         News currentNews = newsRepository.save(createNews);
         Set<Image> images = new HashSet<>();
         int count = 0;
-        for(MultipartFile file : files) {
+    /*    for(MultipartFile file : files) {
             String filePath = imageService.saveImage(file, newsRequest.getImagePaths().get(count++));
             //TODO : Attach the file paths to News
             images.add(Image.builder()
@@ -148,7 +149,7 @@ public class NewsServiceImpl implements NewsService {
                     .path(filePath)
                     .build());
         }
-
+    */
         return currentNews;
 
 
@@ -211,5 +212,24 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public void deleteNews(Long newsId) throws ResourceNotFoundException {
         newsRepository.deleteById(newsId);
+    }
+
+    @Override
+    public List<News> filterByTitleKeyword(String keyword){
+        return newsRepository.findByTitleContaining(keyword);
+    }
+
+    @Override
+    public void setTrending(List<Long> ids){
+        List<News> news = newsRepository.findAllById(ids);
+        news.forEach(currentnews -> currentnews.setTrending(true));
+        newsRepository.saveAll(news);
+    }
+
+    @Override
+    public void resetTrending(List<Long> ids){
+        List<News> news = newsRepository.findAllById(ids);
+        news.forEach(currentnews -> currentnews.setTrending(false));
+        newsRepository.saveAll(news);
     }
 }

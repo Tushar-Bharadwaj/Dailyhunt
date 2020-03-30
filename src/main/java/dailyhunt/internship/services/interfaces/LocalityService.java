@@ -5,6 +5,7 @@ import dailyhunt.internship.entities.newscomponents.Locality;
 import dailyhunt.internship.exceptions.ResourceNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface LocalityService {
     Locality findLocalityById(Long id);
@@ -19,5 +20,5 @@ public interface LocalityService {
 
     List<Locality> findAllById(List<Long> id);
 
-
+    Optional<Locality> findLocalityByName(String name);
 }

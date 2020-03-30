@@ -86,5 +86,9 @@ public class TagServiceImpl implements TagService {
         return tagRepository.findAllById(ids);
     }
 
+    @Override
+    public Optional<Tag> findTagByName(String name){
+        return tagRepository.findByName(name);
+    }
 
 }

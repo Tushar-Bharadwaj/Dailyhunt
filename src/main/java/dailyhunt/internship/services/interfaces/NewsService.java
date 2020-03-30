@@ -20,5 +20,11 @@ public interface NewsService {
     void deleteNews(Long newsId) throws ResourceNotFoundException;
 
     News updateNews(NewsRequest newsRequest);
+
+    List<News> filterByTitleKeyword(String keyword);
+
+    void setTrending(List<Long> ids);
+
+    void resetTrending(List<Long> ids);
 }
 

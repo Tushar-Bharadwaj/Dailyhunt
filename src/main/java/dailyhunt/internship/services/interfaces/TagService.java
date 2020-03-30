@@ -23,4 +23,6 @@ public interface TagService {
 
     List<Tag> findAllById(List<Long> ids);
 
+    Optional<Tag> findTagByName(String name);
+
 }

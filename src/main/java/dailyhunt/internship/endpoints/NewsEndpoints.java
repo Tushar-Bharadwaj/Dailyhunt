@@ -46,4 +46,18 @@ public class NewsEndpoints {
         newsService.deleteNews(newsid);
         return ResponseEntity.ok().body("News deleted successfully");
     }
+
+    @PostMapping("/set_trending")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> setTrending(@Valid @RequestBody List<Long> ids){
+        newsService.setTrending(ids);
+        return ResponseEntity.ok().body("news set to trending");
+    }
+
+    @PostMapping("/reset_trending")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> resetTrending(@Valid @RequestBody List<Long> ids){
+        newsService.resetTrending(ids);
+        return ResponseEntity.ok().body("news reset to trending");
+    }
 }

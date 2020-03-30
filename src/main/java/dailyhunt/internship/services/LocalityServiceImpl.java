@@ -76,4 +76,9 @@ public class LocalityServiceImpl implements LocalityService {
     public List<Locality> findAllById(List<Long> ids) {
         return localityRepository.findAllById(ids);
     }
+
+    @Override
+    public Optional<Locality> findLocalityByName(String name){
+        return localityRepository.findByName(name);
+    }
 }
