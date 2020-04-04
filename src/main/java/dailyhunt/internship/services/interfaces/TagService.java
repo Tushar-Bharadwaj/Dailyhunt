@@ -23,6 +23,6 @@ public interface TagService {
 
     List<Tag> findAllById(List<Long> ids);
 
-    Tag toggleActiveStatus(Long tagId);
+    Optional<Tag> findTagByName(String name);
 
 }

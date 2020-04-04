@@ -1,6 +1,8 @@
 package dailyhunt.internship.services;
 
+import dailyhunt.internship.clientmodels.request.NewsComponents;
 import dailyhunt.internship.clientmodels.request.NewsRequest;
+import dailyhunt.internship.clientmodels.request.UpdateNewsRequest;
 import dailyhunt.internship.entities.Image;
 import dailyhunt.internship.entities.News;
 import dailyhunt.internship.entities.User;
@@ -14,13 +16,9 @@ import dailyhunt.internship.repositories.NewsRepository;
 import dailyhunt.internship.services.interfaces.*;
 import dailyhunt.internship.util.DailyhuntUtil;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -33,6 +31,7 @@ public class NewsServiceImpl implements NewsService {
     private LanguageService languageService;
     private UserService userService;
     private ImageService imageService;
+
     public NewsServiceImpl(NewsRepository newsRepository, TagService tagService,
                            GenreService genreService, LocalityService localityService, LanguageService languageService,
                            UserService userService, ImageService imageService) {
@@ -43,6 +42,7 @@ public class NewsServiceImpl implements NewsService {
         this.languageService = languageService;
         this.userService = userService;
         this.imageService = imageService;
+
     }
 
     @Override
@@ -59,24 +59,55 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public News saveNews(NewsRequest news, MultipartFile[] files) throws IOException {
+    public News saveNews(NewsRequest newsRequest) throws IOException {
 
         //Create new tags if not existing
         Set<Tag> tags = new HashSet<>();
         //Check for valid Locality, Language, Genre
-        news.getTags().forEach(currentTag ->
+        newsRequest.getTags().forEach(currentTag ->
             tags.add(tagService.saveTags(currentTag))
         );
+
+
         //Save news
-        List<Locality> localities = localityService.findAllById(news.getLocalityIds());
-        List<Language> languages = languageService.findAllById(news.getLanguageIds());
-        List<Genre> genres = genreService.findAllById(news.getGenreIds());
-        User user = userService.findUserById(news.getUserId());
+        List<Locality> localities = localityService.findAllById(newsRequest.getLocalityIds());
+        List<Language> languages = languageService.findAllById(newsRequest.getLanguageIds());
+        List<Genre> genres = genreService.findAllById(newsRequest.getGenreIds());
+        User user = userService.findUserById(newsRequest.getUserId());
 
         if(languages.isEmpty() || genres.isEmpty() || localities.isEmpty()
                 || DailyhuntUtil.isNullOrEmpty(user)) {
             throw new BadRequestException("Please Fill All Fields");
         }
+
+        //Updating the post counts of tags, localities, languages and genres
+        localities.forEach(locality -> {
+            locality.setPostCount(locality.getPostCount() + 1);
+            NewsComponents locality_request = NewsComponents.builder()
+                    .name(locality.getName())
+                    .active(locality.getActive())
+                    .postCount(locality.getPostCount())
+                    .build();
+            localityService.updateLocality(locality_request, locality.getId());
+        });
+        languages.forEach(language -> {
+            language.setPostCount(language.getPostCount() + 1);
+            NewsComponents language_request = NewsComponents.builder()
+                    .name(language.getName())
+                    .active(language.getActive())
+                    .postCount(language.getPostCount())
+                    .build();
+            languageService.updateLanguage(language_request, language.getId());
+        });
+        genres.forEach(genre -> {
+            genre.setPostCount(genre.getPostCount() + 1);
+            NewsComponents genre_request = NewsComponents.builder()
+                    .name(genre.getName())
+                    .active(genre.getActive())
+                    .postCount(genre.getPostCount())
+                    .build();
+            genreService.updateGenre(genre_request, genre.getId());
+        });
 
 
 
@@ -89,33 +120,114 @@ public class NewsServiceImpl implements NewsService {
                 .localities(new HashSet<>(localities))
                 .language(new HashSet<>(languages))
                 .published(false)
-                .shortText(news.getShortText())
-                .title(news.getTitle())
-                .text(news.getText())
+                .shortText(newsRequest.getShortText())
+                .title(newsRequest.getTitle())
+                .text(newsRequest.getText())
                 .updatedAt(new Date())
                 .user(user)
+                .trending(false)
                 .build();
 
 
         News currentNews = newsRepository.save(createNews);
-        Set<Image> images = new HashSet<>();
-        int count = 0;
-        for(MultipartFile file : files) {
-            String filePath = imageService.saveImage(file, news.getImageMD5s().get(count++));
+    //    Set<Image> images = new HashSet<>();
+    /*    byte[] fileContent = file.getBytes();
+        String encodedString = Base64.getEncoder().encodeToString(fileContent);
+        String filePath = imageService.saveImage(encodedString);
+ */
+        String filePath = imageService.saveImage(newsRequest.getBase64string());
+        currentNews.setImagePath(filePath);
+        return newsRepository.save(currentNews);
+    //    int count = 0;
+    /*    for(MultipartFile file : files) {
+            String filePath = imageService.saveImage(file, newsRequest.getImagePaths().get(count++));
             //TODO : Attach the file paths to News
+            images.add(Image.builder()
+                    .news(currentNews)
+                    .path(filePath)
+                    .build());
         }
+    */
+    //    return currentNews;
+
+
+    }
+
+    @Override
+    public News updateNews(UpdateNewsRequest updateNewsRequest) throws ResourceNotFoundException {
+        Optional<News> optional = newsRepository.findById(updateNewsRequest.getId());
+        if(!optional.isPresent())
+            throw new ResourceNotFoundException("Invalid news");
+        News news = optional.get();
+    //    news.setId(newsRequest.getId());
+
+        User user = userService.findUserById(updateNewsRequest.getUserId());
+
+        news.setUser(user);
+
+        news.setTitle(updateNewsRequest.getTitle());
+        news.setText(updateNewsRequest.getText());
+        news.setShortText(updateNewsRequest.getShortText());
+
+        news.setDraft(updateNewsRequest.getDraft());
+        news.setPublished(updateNewsRequest.getPublished());
+        news.setApproved(updateNewsRequest.getApproved());
+
+        User approver = userService.findUserByName(updateNewsRequest.getApprovedBy());
+        news.setApprovedBy(approver);
+
+        Set<Tag> tags = new HashSet<>();
+        updateNewsRequest.getTags().forEach(currentTag ->
+                tags.add(tagService.saveTags(currentTag))
+        );
+        List<Locality> localities = localityService.findAllById(updateNewsRequest.getLocalityIds());
+        List<Language> languages = languageService.findAllById(updateNewsRequest.getLanguageIds());
+        List<Genre> genres = genreService.findAllById(updateNewsRequest.getGenreIds());
+
+        if( languages.isEmpty() || genres.isEmpty() || localities.isEmpty()
+                || DailyhuntUtil.isNullOrEmpty(user)) {
+            throw new BadRequestException("Please Fill All Fields");
+        }
+
+        news.setTags(new HashSet<>(tags));
+        news.setLocalities(new HashSet<>(localities));
+        news.setLanguage(new HashSet<>(languages));
+        news.setGenres(new HashSet<>(genres));
+
+        News currentNews = newsRepository.save(news);
+
+        Set<Image> images = new HashSet<>();
+        for(String path : updateNewsRequest.getImagePaths()){
+            Image.builder()
+                    .path(path)
+                    .news(currentNews)
+                    .build();
+        }
+
         return currentNews;
-
-
     }
 
     @Override
-    public News updateNews(NewsRequest news, Long newsId) throws ResourceNotFoundException {
-        return null;
+    public void deleteNews(Long newsId) throws ResourceNotFoundException {
+        newsRepository.deleteById(newsId);
     }
 
     @Override
-    public Boolean deleteNews(Long newsId) throws ResourceNotFoundException {
-        return null;
+    public List<News> filterByTitleKeyword(String keyword){
+        return newsRepository.findByTitleContaining(keyword);
+    }
+
+    @Override
+    public void setTrending(List<Long> ids){
+        List<News> news = newsRepository.findAllById(ids);
+        news.forEach(currentnews -> currentnews.setTrending(true));
+        newsRepository.saveAll(news);
+    }
+
+    @Override
+    public void resetTrending(List<Long> ids){
+        List<News> news = newsRepository.findAllById(ids);
+        news.forEach(currentnews -> currentnews.setTrending(false));
+        newsRepository.saveAll(news);
     }
 }

@@ -8,11 +8,11 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
-public class NewsRequest {
+public class UpdateNewsRequest {
 
-/*    @NotNull
+    @NotNull
     private Long id;
-  */
+
     @NotNull(message = "User ID Required")
     private Long userId;
 
@@ -37,6 +37,13 @@ public class NewsRequest {
     @NotEmpty(message = "You must have atleast 1 language")
     private List<Long> languageIds;
 
-    private String base64string;
+    private List<String> imagePaths;
 
+    private Boolean draft;
+
+    private Boolean published;
+
+    private Boolean approved;
+
+    private String approvedBy;
 }

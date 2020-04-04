@@ -50,9 +50,16 @@ public class LocalityServiceImpl implements LocalityService {
 
     @Override
     public Locality updateLocality(NewsComponents request, Long localityId) throws ResourceNotFoundException {
-        Locality locality = findLocalityById(localityId);
-        locality.setName(request.getName());
-        return localityRepository.save(locality);
+        Optional<Locality> checkLocality = localityRepository.findById(localityId);
+        if(checkLocality.isPresent()) {
+            if(DailyhuntUtil.isNullOrEmpty(request.getActive()))
+                throw new BadRequestException("Please fill all fields");
+            Locality locality = checkLocality.get();
+            locality.setActive(request.getActive());
+            locality.setPostCount(request.getPostCount());
+            return localityRepository.save(locality);
+        }
+        throw new ResourceNotFoundException("Invalid locality selected.");
     }
 
     @Override
@@ -66,15 +73,12 @@ public class LocalityServiceImpl implements LocalityService {
     }
 
     @Override
-    public List<Locality> findAllById(List<Long> id) {
-        return null;
+    public List<Locality> findAllById(List<Long> ids) {
+        return localityRepository.findAllById(ids);
     }
 
     @Override
-    public Locality toggleActiveStatus(Long localityId) {
-        Locality locality = findLocalityById(localityId);
-        locality.setActive(!locality.getActive());
-        localityRepository.save(locality);
-        return locality;
+    public Optional<Locality> findLocalityByName(String name){
+        return localityRepository.findByName(name);
     }
 }

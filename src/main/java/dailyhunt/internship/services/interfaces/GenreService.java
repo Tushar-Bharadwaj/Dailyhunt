@@ -20,6 +20,4 @@ public interface GenreService {
     Boolean deleteGenre(Long genreId);
 
     List<Genre> findAllById(List<Long> ids);
-
-    Genre toggleActiveStatus(Long genreId);
 }

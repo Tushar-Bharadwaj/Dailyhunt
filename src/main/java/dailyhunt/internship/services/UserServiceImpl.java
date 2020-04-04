@@ -1,6 +1,7 @@
 package dailyhunt.internship.services;
 
 import dailyhunt.internship.clientmodels.request.SignUpForm;
+import dailyhunt.internship.clientmodels.request.UpdateForm;
 import dailyhunt.internship.entities.Role;
 import dailyhunt.internship.entities.User;
 import dailyhunt.internship.enums.RoleName;
@@ -38,6 +39,15 @@ public class UserServiceImpl implements UserService {
         if(!user.isPresent()) {
             throw new ResourceNotFoundException("This user does not exist");
         }
+        return user.get();
+    }
+
+    @Override
+    @Transactional
+    public User findUserByName(String name) throws ResourceNotFoundException {
+        Optional<User> user = userRepository.findByName(name);
+        if(!user.isPresent())
+            throw new ResourceNotFoundException("User with name: "+name+" does not exist");
         return user.get();
     }
 
@@ -96,6 +106,45 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(Long userId) {
+
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    @Transactional
+    public User updateUser(UpdateForm updateForm) throws ResourceNotFoundException{
+        Optional<User> optional = userRepository.findById(updateForm.getId());
+        if(!optional.isPresent())
+            throw new ResourceNotFoundException("Invalid user");
+        User user = optional.get();
+        user.setName(updateForm.getName());
+        user.setEmail(updateForm.getEmail());
+
+        Set<String> strRoles = updateForm.getRole();
+        Set<Role> roles = new HashSet<>();
+
+        strRoles.forEach(role -> {
+            switch(role) {
+                case "ADMIN":
+                    Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
+                            .orElseThrow(() -> new BadRequestException("Fail! -> Cause: User Role not find."));
+                    roles.add(adminRole);
+
+                    break;
+                case "MODERATOR":
+                    Role pmRole = roleRepository.findByName(RoleName.ROLE_MODERATOR)
+                            .orElseThrow(() -> new BadRequestException("Fail! -> Cause: User Role not find."));
+                    roles.add(pmRole);
+
+                    break;
+                default:
+                    Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+                            .orElseThrow(() -> new BadRequestException("Fail! -> Cause: User Role not find."));
+                    roles.add(userRole);
+            }
+        });
+        user.setRoles(roles);
+        userRepository.save(user);
+        return user;
     }
 }

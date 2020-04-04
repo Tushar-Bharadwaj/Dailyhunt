@@ -35,16 +35,19 @@ public class News {
             joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
+
     @ManyToMany
     @JoinTable(name = "news_locality",
             joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "locality_id"))
     private Set<Locality> localities;
+
     @ManyToMany
     @JoinTable(name = "news_genre",
             joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private Set<Genre> genres;
+
     @ManyToMany
     @JoinTable(name = "news_language",
             joinColumns = @JoinColumn(name = "news_id"),
@@ -59,10 +62,11 @@ public class News {
     private Boolean approved;
     private Boolean published;
 
-    @OneToMany
-    private Set<Image> imageIds;
+  //  @OneToMany
+    private String imagePath;
 
     @ManyToOne
     private User approvedBy;
 
+    private Boolean trending;
 }

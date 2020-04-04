@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(GenreEndpoints.BASE_URL)
 public class GenreEndpoints {
@@ -42,7 +41,7 @@ public class GenreEndpoints {
     @PutMapping("/{genreId}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public Genre updateGenre(@Valid @RequestBody NewsComponents request, @PathVariable Long genreId) throws ResourceNotFoundException {
+    public Genre updateGenre(@RequestBody NewsComponents request, @PathVariable Long genreId) throws ResourceNotFoundException {
         return genreService.updateGenre(request, genreId);
     }
 
@@ -51,11 +50,5 @@ public class GenreEndpoints {
     @ResponseStatus(HttpStatus.OK)
     public Boolean deleteGenre(@PathVariable Long genreId) throws ResourceNotFoundException {
         return genreService.deleteGenre(genreId);
-    }
-
-    @PutMapping("/activity/{genreId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public Genre activity(@PathVariable Long genreId) throws ResourceNotFoundException {
-        return genreService.toggleActiveStatus(genreId);
     }
 }

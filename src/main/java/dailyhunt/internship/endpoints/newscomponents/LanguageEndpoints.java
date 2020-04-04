@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(LanguageEndpoints.BASE_URL)
 public class LanguageEndpoints {
@@ -42,7 +41,7 @@ public class LanguageEndpoints {
     @PutMapping("/{languageId}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public Language updateLanguage(@Valid @RequestBody NewsComponents request, @PathVariable Long languageId) throws ResourceNotFoundException {
+    public Language updateLanguage(@RequestBody NewsComponents request, @PathVariable Long languageId) throws ResourceNotFoundException {
         return languageService.updateLanguage(request, languageId);
     }
 
@@ -51,12 +50,6 @@ public class LanguageEndpoints {
     @ResponseStatus(HttpStatus.OK)
     public Boolean deleteLanguage(@PathVariable Long languageId) throws ResourceNotFoundException {
         return languageService.deleteLanguage(languageId);
-    }
-
-    @PutMapping("/activity/{languageId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public Language activity(@PathVariable Long languageId) throws ResourceNotFoundException {
-        return languageService.toggleActiveStatus(languageId);
     }
 }
 

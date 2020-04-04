@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(LocalityEndpoints.BASE_URL)
 public class LocalityEndpoints {
@@ -52,11 +51,5 @@ public class LocalityEndpoints {
     @ResponseStatus(HttpStatus.OK)
     public Boolean deleteLocality(@PathVariable Long localityId) throws ResourceNotFoundException {
         return localityService.deleteLocality(localityId);
-    }
-
-    @PutMapping("/activity/{localityId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public Locality activity(@PathVariable Long localityId) throws ResourceNotFoundException {
-        return localityService.toggleActiveStatus(localityId);
     }
 }

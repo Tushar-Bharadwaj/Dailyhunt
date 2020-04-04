@@ -57,9 +57,16 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre updateGenre(NewsComponents request, Long genreId) throws ResourceNotFoundException {
-        Genre genre = findGenreById(genreId);
-        genre.setName(request.getName());
-        return genreRepository.save(genre);
+        Optional<Genre> checkGenre = genreRepository.findById(genreId);
+        if(checkGenre.isPresent()) {
+            if(DailyhuntUtil.isNullOrEmpty(request.getActive()))
+                throw new BadRequestException("Please fill all fields");
+            Genre genre = checkGenre.get();
+            genre.setActive(request.getActive());
+            genre.setPostCount(request.getPostCount());
+            return genreRepository.save(genre);
+        }
+        throw new ResourceNotFoundException("Invalid genre selected.");
     }
 
     @Override
@@ -75,13 +82,5 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public List<Genre> findAllById(List<Long> ids) {
         return genreRepository.findAllById(ids);
-    }
-
-    @Override
-    public Genre toggleActiveStatus(Long genreId) {
-        Genre genre = findGenreById(genreId);
-        genre.setActive(!genre.getActive());
-        genreRepository.save(genre);
-        return genre;
     }
 }

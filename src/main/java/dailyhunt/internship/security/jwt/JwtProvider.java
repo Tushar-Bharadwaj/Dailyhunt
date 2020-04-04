@@ -19,8 +19,7 @@ public class JwtProvider {
     @Value("${dailyhunt.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${dailyhunt.jwtExpiration}")
-    private int jwtExpiration;
+    private int jwtExpiration = 864_000;
 
     public String generateJwtToken(Authentication authentication) {
 

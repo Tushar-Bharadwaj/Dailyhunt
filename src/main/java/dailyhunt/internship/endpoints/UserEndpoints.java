@@ -2,24 +2,17 @@ package dailyhunt.internship.endpoints;
 
 
 import dailyhunt.internship.clientmodels.request.SignUpForm;
-import dailyhunt.internship.clientmodels.response.UserResponse;
+import dailyhunt.internship.clientmodels.request.UpdateForm;
 import dailyhunt.internship.exceptions.BadRequestException;
-import dailyhunt.internship.security.services.UserPrinciple;
 import dailyhunt.internship.services.interfaces.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.nio.file.attribute.UserPrincipal;
 
-@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(UserEndpoints.BASE_URL)
+@RequestMapping(AuthEndpoints.BASE_URL)
 public class UserEndpoints {
     static final String BASE_URL = "/api/v1/user";
 
@@ -29,15 +22,9 @@ public class UserEndpoints {
         this.userService = userService;
     }
 
-    @GetMapping()
-    public ResponseEntity<?> getAllUsers() {
-        return ResponseEntity.ok().body(userService.findAllUsers());
-    }
-
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> createUser(@Valid @RequestBody SignUpForm signUpRequest) throws BadRequestException {
-
         userService.saveUser(signUpRequest);
         return ResponseEntity.ok().body("User created successfully!");
     }
@@ -54,13 +41,15 @@ public class UserEndpoints {
         return ResponseEntity.ok().body(userService.findUserById(userId));
     }
 
-    @GetMapping("/info")
-    public ResponseEntity<?> user() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserPrinciple user = (UserPrinciple) auth.getPrincipal();
-        return ResponseEntity.ok().body(UserResponse.from(userService.findUserById(user.getId())));
+    @GetMapping
+    public ResponseEntity<?> getAllUsers() {
+        return ResponseEntity.ok().body(userService.findAllUsers());
     }
 
-
-
+    @PutMapping("/update")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> updateUser(@Valid @RequestBody UpdateForm updateForm){
+        userService.updateUser(updateForm);
+        return ResponseEntity.ok().body("User details updated successfully");
+    }
 }
