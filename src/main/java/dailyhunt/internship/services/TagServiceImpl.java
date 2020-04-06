@@ -48,7 +48,7 @@ public class TagServiceImpl implements TagService {
         return tag.orElseGet(() -> tagRepository.save(
                 Tag.builder()
                         .active(true)
-                        .name(StringUtils.capitalize(tags.getName().toLowerCase()))
+                        .name(tags.getName())
                         .postCount(0L)
                         .build()
         ));
