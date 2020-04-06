@@ -3,7 +3,6 @@ package dailyhunt.internship.services;
 import dailyhunt.internship.clientmodels.request.NewsComponents;
 import dailyhunt.internship.clientmodels.request.NewsRequest;
 import dailyhunt.internship.clientmodels.request.UpdateNewsRequest;
-import dailyhunt.internship.entities.Image;
 import dailyhunt.internship.entities.News;
 import dailyhunt.internship.entities.User;
 import dailyhunt.internship.entities.newscomponents.Genre;
@@ -130,27 +129,9 @@ public class NewsServiceImpl implements NewsService {
 
 
         News currentNews = newsRepository.save(createNews);
-    //    Set<Image> images = new HashSet<>();
-    /*    byte[] fileContent = file.getBytes();
-        String encodedString = Base64.getEncoder().encodeToString(fileContent);
-        String filePath = imageService.saveImage(encodedString);
- */
         String filePath = imageService.saveImage(newsRequest.getBase64string());
         currentNews.setImagePath(filePath);
         return newsRepository.save(currentNews);
-    //    int count = 0;
-    /*    for(MultipartFile file : files) {
-            String filePath = imageService.saveImage(file, newsRequest.getImagePaths().get(count++));
-            //TODO : Attach the file paths to News
-            images.add(Image.builder()
-                    .news(currentNews)
-                    .path(filePath)
-                    .build());
-        }
-    */
-    //    return currentNews;
-
-
     }
 
     @Override
@@ -194,17 +175,8 @@ public class NewsServiceImpl implements NewsService {
         news.setLanguage(new HashSet<>(languages));
         news.setGenres(new HashSet<>(genres));
 
-        News currentNews = newsRepository.save(news);
+        return newsRepository.save(news);
 
-        Set<Image> images = new HashSet<>();
-        for(String path : updateNewsRequest.getImagePaths()){
-            Image.builder()
-                    .path(path)
-                    .news(currentNews)
-                    .build();
-        }
-
-        return currentNews;
     }
 
     @Override

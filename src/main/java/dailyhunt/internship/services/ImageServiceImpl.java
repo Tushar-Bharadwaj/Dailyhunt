@@ -1,6 +1,7 @@
 package dailyhunt.internship.services;
 
 import dailyhunt.internship.clientmodels.request.MultiPartResource;
+import dailyhunt.internship.clientmodels.response.ImageDTO;
 import dailyhunt.internship.services.interfaces.ImageService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
@@ -19,20 +20,15 @@ import java.nio.file.Paths;
 @Service
 public class ImageServiceImpl implements ImageService {
 
+
     @Override
     public String saveImage(String base_64_string) throws IOException{
 
         RestTemplate restTemplate = new RestTemplate();
-        String fooResourceUrl = "http://localhost:8081/image/uploadFile";
-        String result = restTemplate.postForObject(fooResourceUrl, base_64_string, String.class);
+        String fooResourceUrl = "https://dailyhunt-image-service.herokuapp.com/uploadFile";
+        ImageDTO imageDTO = ImageDTO.builder().base64(base_64_string).build();
+        String result = restTemplate.postForObject(fooResourceUrl, imageDTO, String.class);
         return result;
     }
 
-/*    public byte[] getImage(String imagepath) throws IOException{
-        RestTemplate restTemplate = new RestTemplate();
-        String fooResourceUrl = "http://localhost:8081/api/v1/image_service/" + imagepath;
-        byte[] result = restTemplate.getForObject(fooResourceUrl);
-        return result;
-    }
-*/
 }

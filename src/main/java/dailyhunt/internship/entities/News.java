@@ -1,5 +1,7 @@
 package dailyhunt.internship.entities;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dailyhunt.internship.entities.newscomponents.Genre;
 import dailyhunt.internship.entities.newscomponents.Language;
 import dailyhunt.internship.entities.newscomponents.Locality;
@@ -23,46 +25,47 @@ public class News {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
     private String title;
     private String text;
     private String shortText;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(name = "news_tags",
             joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Set<Tag> tags;
 
     @ManyToMany
     @JoinTable(name = "news_locality",
             joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "locality_id"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Set<Locality> localities;
 
     @ManyToMany
     @JoinTable(name = "news_genre",
             joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Set<Genre> genres;
 
     @ManyToMany
     @JoinTable(name = "news_language",
             joinColumns = @JoinColumn(name = "news_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Set<Language> language;
-
-
-    //    private Long languageId;
     private Boolean draft;
     private Date createdAt;
     private Date updatedAt;
     private Boolean approved;
     private Boolean published;
 
-  //  @OneToMany
     private String imagePath;
 
     @ManyToOne
