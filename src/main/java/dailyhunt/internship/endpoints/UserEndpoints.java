@@ -3,10 +3,14 @@ package dailyhunt.internship.endpoints;
 
 import dailyhunt.internship.clientmodels.request.SignUpForm;
 import dailyhunt.internship.clientmodels.request.UpdateForm;
+import dailyhunt.internship.clientmodels.response.UserResponse;
 import dailyhunt.internship.exceptions.BadRequestException;
+import dailyhunt.internship.security.services.UserPrinciple;
 import dailyhunt.internship.services.interfaces.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -52,5 +56,13 @@ public class UserEndpoints {
     public ResponseEntity<String> updateUser(@Valid @RequestBody UpdateForm updateForm){
         userService.updateUser(updateForm);
         return ResponseEntity.ok().body("User details updated successfully");
+    }
+
+
+    @GetMapping("/info")
+    public ResponseEntity<?> user() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrinciple user = (UserPrinciple) auth.getPrincipal();
+        return ResponseEntity.ok().body(UserResponse.from(userService.findUserById(user.getId())));
     }
 }
