@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(NewsEndpoints.BASE_URL)
 public class NewsEndpoints {
