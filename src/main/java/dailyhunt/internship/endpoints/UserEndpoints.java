@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping(AuthEndpoints.BASE_URL)
+@RequestMapping(UserEndpoints.BASE_URL)
 public class UserEndpoints {
     static final String BASE_URL = "/api/v1/user";
 
