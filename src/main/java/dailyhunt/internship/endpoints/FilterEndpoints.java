@@ -1,6 +1,6 @@
 package dailyhunt.internship.endpoints;
 
-import dailyhunt.internship.clientmodels.request.FilterForm;
+import dailyhunt.internship.clientmodels.request.*;
 import dailyhunt.internship.entities.News;
 import dailyhunt.internship.services.interfaces.FilterService;
 import lombok.NoArgsConstructor;
@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -23,8 +24,38 @@ public class FilterEndpoints {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<News>> filterNews(@RequestBody FilterForm filterForm){
+    public ResponseEntity<List<News>> filterNews(@Valid @RequestBody FilterForm filterForm){
         return ResponseEntity.ok().body(filterService.filter(filterForm));
+    }
+
+    @GetMapping("/keyword")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<News>> filterNewsByKeyword(@Valid @RequestParam String keyword){
+        return ResponseEntity.ok().body(filterService.filterByKeyword(keyword));
+    }
+
+    @PostMapping("/date-range")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<News>> filterNewsByDateRange(@Valid @RequestBody DateFilter dateFilter){
+        return ResponseEntity.ok().body(filterService.filterByDateRange(dateFilter));
+    }
+
+    @PostMapping("/tags")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<News>> filterNewsByTag(@Valid @RequestBody FilterTags filterTags){
+        return ResponseEntity.ok().body(filterService.filterByTag(filterTags.getTags()));
+    }
+
+    @PostMapping("/genreIds")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<News>> filterNewsByGenre(@Valid @RequestBody FilterGenreIds filterGenreIds){
+        return ResponseEntity.ok().body(filterService.filterByGenre(filterGenreIds.getGenreIds()));
+    }
+
+    @PostMapping("/localityIds")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<News>> filterNewsByLocality(@Valid @RequestBody FilterLocalityIds filterLocalityIds){
+        return ResponseEntity.ok().body(filterService.filterByLocality(filterLocalityIds.getLocalityIds()));
     }
 
 }

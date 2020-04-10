@@ -21,7 +21,6 @@ public interface NewsService {
 
     News updateNews(UpdateNewsRequest updateNewsRequest);
 
-    List<News> filterByTitleKeyword(String keyword);
 
     void setTrending(List<Long> ids);
 

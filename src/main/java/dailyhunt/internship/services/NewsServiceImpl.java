@@ -184,10 +184,6 @@ public class NewsServiceImpl implements NewsService {
         newsRepository.deleteById(newsId);
     }
 
-    @Override
-    public List<News> filterByTitleKeyword(String keyword){
-        return newsRepository.findByTitleContaining(keyword);
-    }
 
     @Override
     public void setTrending(List<Long> ids){
