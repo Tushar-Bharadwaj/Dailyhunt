@@ -23,16 +23,16 @@ public class NewsRequest {
     @NotBlank(message = "Short Text is missing")
     private String shortText;
 
-    @NotEmpty(message = "You must have atleast 1 tag")
+   // @NotEmpty(message = "You must have atleast 1 tag")
     private List<String> tags;
 
-    @NotEmpty(message = "You must enter atleast 1 locality")
+    //@NotEmpty(message = "You must enter atleast 1 locality")
     private List<Long> localityIds;
 
-    @NotEmpty(message = "You must have atleast 1 genre")
+    //@NotEmpty(message = "You must have atleast 1 genre")
     private List<Long> genreIds;
 
-    @NotEmpty(message = "You must have atleast 1 language")
+    //@NotEmpty(message = "You must have atleast 1 language")
     private List<Long> languageIds;
 
     private String base64string;
