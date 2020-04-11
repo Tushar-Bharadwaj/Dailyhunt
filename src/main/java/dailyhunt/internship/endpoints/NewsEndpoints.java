@@ -3,6 +3,7 @@ package dailyhunt.internship.endpoints;
 import dailyhunt.internship.clientmodels.request.NewsRequest;
 import dailyhunt.internship.clientmodels.request.UpdateNewsRequest;
 import dailyhunt.internship.entities.News;
+import dailyhunt.internship.exceptions.ResourceNotFoundException;
 import dailyhunt.internship.services.interfaces.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,8 @@ public class NewsEndpoints {
     @PutMapping("/{newsId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> updateNews(@RequestBody UpdateNewsRequest updateNewsRequest,
-                                             @PathVariable Long newsId){
+                                             @PathVariable Long newsId)
+            throws ResourceNotFoundException, IOException {
         newsService.updateNews(updateNewsRequest, newsId);
         return ResponseEntity.ok().body("News details updated successfully");
     }
