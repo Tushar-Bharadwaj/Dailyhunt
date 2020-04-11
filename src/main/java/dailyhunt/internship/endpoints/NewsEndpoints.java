@@ -34,31 +34,32 @@ public class NewsEndpoints {
         return newsService.saveNews(request);
     }
 
-    @PutMapping
+    @PutMapping("/{newsId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> updateNews(@Valid @RequestBody UpdateNewsRequest updateNewsRequest){
-        newsService.updateNews(updateNewsRequest);
+    public ResponseEntity<String> updateNews(@RequestBody UpdateNewsRequest updateNewsRequest,
+                                             @PathVariable Long newsId){
+        newsService.updateNews(updateNewsRequest, newsId);
         return ResponseEntity.ok().body("News details updated successfully");
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{newsId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteNews(@Valid @RequestBody Long newsid){
-        newsService.deleteNews(newsid);
+    public ResponseEntity<String> deleteNews(@Valid @PathVariable Long newsId){
+        newsService.deleteNews(newsId);
         return ResponseEntity.ok().body("News deleted successfully");
     }
 
-    @PostMapping("/set_trending")
+    @PostMapping("/set_trending/{newsId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> setTrending(@Valid @RequestBody List<Long> ids){
-        newsService.setTrending(ids);
+    public ResponseEntity<String> setTrending(@Valid @PathVariable Long newsId){
+        newsService.setTrending(newsId);
         return ResponseEntity.ok().body("news set to trending");
     }
 
-    @PostMapping("/reset_trending")
+    @PostMapping("/reset_trending/{newsId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> resetTrending(@Valid @RequestBody List<Long> ids){
-        newsService.resetTrending(ids);
+    public ResponseEntity<String> resetTrending(@Valid @PathVariable Long newsId){
+        newsService.resetTrending(newsId);
         return ResponseEntity.ok().body("news reset to trending");
     }
 }
