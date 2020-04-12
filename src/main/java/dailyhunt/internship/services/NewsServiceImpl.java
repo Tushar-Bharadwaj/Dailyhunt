@@ -135,8 +135,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public News updateNews(UpdateNewsRequest updateNewsRequest) throws ResourceNotFoundException {
-        Optional<News> optional = newsRepository.findById(updateNewsRequest.getId());
+    public News updateNews(UpdateNewsRequest updateNewsRequest, Long id) throws
+            IOException, ResourceNotFoundException {
+        Optional<News> optional = newsRepository.findById(id);
         if(!optional.isPresent())
             throw new ResourceNotFoundException("Invalid news");
         News news = optional.get();
@@ -154,7 +155,7 @@ public class NewsServiceImpl implements NewsService {
         news.setPublished(updateNewsRequest.getPublished());
         news.setApproved(updateNewsRequest.getApproved());
 
-        User approver = userService.findUserByName(updateNewsRequest.getApprovedBy());
+        User approver = userService.findUserById(updateNewsRequest.getApprovedBy());
         news.setApprovedBy(approver);
 
         Set<Tag> tags = new HashSet<>();
@@ -175,7 +176,10 @@ public class NewsServiceImpl implements NewsService {
         news.setLanguage(new HashSet<>(languages));
         news.setGenres(new HashSet<>(genres));
 
-        return newsRepository.save(news);
+        News updatedNews = newsRepository.save(news);
+        String filePath = imageService.saveImage(updateNewsRequest.getBase64string());
+        updatedNews.setImagePath(filePath);
+        return newsRepository.save(updatedNews);
 
     }
 
@@ -186,16 +190,16 @@ public class NewsServiceImpl implements NewsService {
 
 
     @Override
-    public void setTrending(List<Long> ids){
-        List<News> news = newsRepository.findAllById(ids);
-        news.forEach(currentnews -> currentnews.setTrending(true));
-        newsRepository.saveAll(news);
+    public void setTrending(Long id){
+        Optional<News> news = newsRepository.findById(id);
+        News currentnews = news.get();
+        newsRepository.save(currentnews);
     }
 
     @Override
-    public void resetTrending(List<Long> ids){
-        List<News> news = newsRepository.findAllById(ids);
-        news.forEach(currentnews -> currentnews.setTrending(false));
-        newsRepository.saveAll(news);
+    public void resetTrending(Long id){
+        Optional<News> news = newsRepository.findById(id);
+        News currentnews = news.get();
+        newsRepository.save(currentnews);
     }
 }
