@@ -108,16 +108,16 @@ public class FilterServiceImpl implements FilterService {
     public List<News> filter(FilterForm filterForm) {
         List<News> keyword_filtered = filterByKeyword(filterForm.getKeyword());
 
-        if (keyword_filtered.size() > 0 && filterForm.getFrom_date() != null) {
-            keyword_filtered.removeIf(news -> filterForm.getFrom_date().after(news.getCreatedAt()));
+        if (keyword_filtered.size() > 0 && filterForm.getFrom_date().isPresent()) {
+            keyword_filtered.removeIf(news -> filterForm.getFrom_date().get().after(news.getCreatedAt()));
         }
         if (filterForm.getTo_date() != null) {
-            keyword_filtered.removeIf(news -> filterForm.getTo_date().before(news.getCreatedAt()));
+            keyword_filtered.removeIf(news -> filterForm.getTo_date().get().before(news.getCreatedAt()));
         }
 
-        if (keyword_filtered.size() > 0 && filterForm.getTags() != null) {
+        if (keyword_filtered.size() > 0 && filterForm.getTags().isPresent()) {
             List<Tag> tags_list = new ArrayList<Tag>();
-            for(String name : filterForm.getTags()) {
+            for(String name : filterForm.getTags().get()) {
                 Optional optional = tagService.findTagByName(name);
                 if(optional.isPresent())
                     tags_list.add((Tag)optional.get());
@@ -127,14 +127,16 @@ public class FilterServiceImpl implements FilterService {
             keyword_filtered.removeIf(news -> !containsAnyTag(news.getTags(), tags_list));
         }
 
-        if (keyword_filtered.size() > 0 && filterForm.getGenreIds() != null) {
+        if (keyword_filtered.size() > 0 && filterForm.getGenreIds().isPresent()) {
 
-            keyword_filtered.removeIf(news -> !containsAnyGenre(news.getGenres(), genreService.findAllById(filterForm.getGenreIds())));
+            keyword_filtered.removeIf(news -> !containsAnyGenre(news.getGenres(),
+                    genreService.findAllById(filterForm.getGenreIds().get())));
         }
 
-        if (keyword_filtered.size() > 0 && filterForm.getLocalityIds() != null) {
+        if (keyword_filtered.size() > 0 && filterForm.getLocalityIds().isPresent()) {
 
-            keyword_filtered.removeIf(news -> !containsAnyLocality(news.getLocalities(), localityService.findAllById(filterForm.getLocalityIds())));
+            keyword_filtered.removeIf(news -> !containsAnyLocality(news.getLocalities(),
+                    localityService.findAllById(filterForm.getLocalityIds().get())));
 
         }
 

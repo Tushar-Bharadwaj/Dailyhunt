@@ -10,8 +10,6 @@ import java.util.List;
 @Data
 public class UpdateNewsRequest {
 
-    @NotNull
-    private Long id;
 
     @NotNull(message = "User ID Required")
     private Long userId;
@@ -37,7 +35,7 @@ public class UpdateNewsRequest {
     @NotEmpty(message = "You must have atleast 1 language")
     private List<Long> languageIds;
 
-    private List<String> imagePaths;
+    private String base64string;
 
     private Boolean draft;
 
@@ -45,5 +43,5 @@ public class UpdateNewsRequest {
 
     private Boolean approved;
 
-    private String approvedBy;
+    private Long approvedBy;
 }
