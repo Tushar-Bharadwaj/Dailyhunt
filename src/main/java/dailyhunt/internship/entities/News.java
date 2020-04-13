@@ -29,8 +29,13 @@ public class News {
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
+
+    @Column(columnDefinition="TEXT")
     private String title;
+
+    @Column(columnDefinition="TEXT")
     private String text;
+    @Column(columnDefinition="TEXT")
     private String shortText;
 
     @ManyToMany

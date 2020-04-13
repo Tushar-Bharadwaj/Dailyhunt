@@ -31,8 +31,10 @@ public class NewsEndpoints {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public News saveNews(@Valid @RequestBody NewsRequest request) throws IOException {
-        return newsService.saveNews(request);
+    public ResponseEntity<String> saveNews(@Valid @RequestBody NewsRequest request) throws IOException {
+        newsService.saveNews(request);
+        return ResponseEntity.ok().body("News Added successfully");
+
     }
 
     @PutMapping("/{newsId}")
