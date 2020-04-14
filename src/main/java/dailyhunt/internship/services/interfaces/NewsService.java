@@ -13,18 +13,17 @@ public interface NewsService {
 
     List<News> findAllNews();
 
-    News saveNews(NewsRequest news) throws IOException;
+    void saveNews(NewsRequest news) throws IOException;
 
 //    News updateNews(NewsRequest news, Long newsId) throws ResourceNotFoundException;
 
     void deleteNews(Long newsId) throws ResourceNotFoundException;
 
-    News updateNews(UpdateNewsRequest updateNewsRequest, Long newsId) throws
+    void updateNews(UpdateNewsRequest updateNewsRequest, Long newsId) throws
             ResourceNotFoundException, IOException;
 
 
     void setTrending(Long id);
-
-    void resetTrending(Long id);
+    void publishNews(Long id);
 }
 

@@ -58,7 +58,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public News saveNews(NewsRequest newsRequest) throws IOException {
+    public void saveNews(NewsRequest newsRequest) throws IOException {
 
         //Create new tags if not existing
         Set<Tag> tags = new HashSet<>();
@@ -131,32 +131,25 @@ public class NewsServiceImpl implements NewsService {
         News currentNews = newsRepository.save(createNews);
         String filePath = imageService.saveImage(newsRequest.getBase64string());
         currentNews.setImagePath(filePath);
-        return newsRepository.save(currentNews);
+        newsRepository.save(currentNews);
     }
 
     @Override
-    public News updateNews(UpdateNewsRequest updateNewsRequest, Long id) throws
+    public void updateNews(UpdateNewsRequest updateNewsRequest, Long id) throws
             IOException, ResourceNotFoundException {
-        Optional<News> optional = newsRepository.findById(id);
-        if(!optional.isPresent())
-            throw new ResourceNotFoundException("Invalid news");
-        News news = optional.get();
-    //    news.setId(newsRequest.getId());
+
+        News news = findNewsById(id);
 
         User user = userService.findUserById(updateNewsRequest.getUserId());
-
-        news.setUser(user);
 
         news.setTitle(updateNewsRequest.getTitle());
         news.setText(updateNewsRequest.getText());
         news.setShortText(updateNewsRequest.getShortText());
 
         news.setDraft(updateNewsRequest.getDraft());
-        news.setPublished(updateNewsRequest.getPublished());
-        news.setApproved(updateNewsRequest.getApproved());
+        if(!DailyhuntUtil.isNullOrEmpty(updateNewsRequest.getPublished()))
+            news.setPublished(updateNewsRequest.getPublished());
 
-        User approver = userService.findUserById(updateNewsRequest.getApprovedBy());
-        news.setApprovedBy(approver);
 
         Set<Tag> tags = new HashSet<>();
         updateNewsRequest.getTags().forEach(currentTag ->
@@ -179,7 +172,7 @@ public class NewsServiceImpl implements NewsService {
         News updatedNews = newsRepository.save(news);
         String filePath = imageService.saveImage(updateNewsRequest.getBase64string());
         updatedNews.setImagePath(filePath);
-        return newsRepository.save(updatedNews);
+        newsRepository.save(updatedNews);
 
     }
 
@@ -191,15 +184,16 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public void setTrending(Long id){
-        Optional<News> news = newsRepository.findById(id);
-        News currentnews = news.get();
+        News currentnews = findNewsById(id);
+        currentnews.setTrending(!currentnews.getTrending());
         newsRepository.save(currentnews);
     }
 
     @Override
-    public void resetTrending(Long id){
-        Optional<News> news = newsRepository.findById(id);
-        News currentnews = news.get();
+    public void publishNews(Long id){
+        News currentnews = findNewsById(id);
+        currentnews.setPublished(!currentnews.getPublished());
         newsRepository.save(currentnews);
     }
+
 }

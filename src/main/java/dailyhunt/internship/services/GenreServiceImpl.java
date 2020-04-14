@@ -57,16 +57,15 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre updateGenre(NewsComponents request, Long genreId) throws ResourceNotFoundException {
-        Optional<Genre> checkGenre = genreRepository.findById(genreId);
-        if(checkGenre.isPresent()) {
-            if(DailyhuntUtil.isNullOrEmpty(request.getActive()))
-                throw new BadRequestException("Please fill all fields");
-            Genre genre = checkGenre.get();
-            genre.setActive(request.getActive());
-            genre.setPostCount(request.getPostCount());
+
+            Genre genre = findGenreById(genreId);
+            if(!DailyhuntUtil.isNullOrEmpty(request.getActive())) {
+                genre.setActive(request.getActive());
+            }
+            if(!DailyhuntUtil.isNullOrEmpty(request.getActive())) {
+                genre.setActive(request.getActive());
+            }
             return genreRepository.save(genre);
-        }
-        throw new ResourceNotFoundException("Invalid genre selected.");
     }
 
     @Override

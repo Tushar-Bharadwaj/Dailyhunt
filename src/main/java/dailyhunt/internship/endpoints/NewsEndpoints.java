@@ -4,11 +4,14 @@ import dailyhunt.internship.clientmodels.request.NewsRequest;
 import dailyhunt.internship.clientmodels.request.UpdateNewsRequest;
 import dailyhunt.internship.entities.News;
 import dailyhunt.internship.exceptions.ResourceNotFoundException;
+import dailyhunt.internship.security.services.UserPrinciple;
 import dailyhunt.internship.services.interfaces.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -42,6 +45,9 @@ public class NewsEndpoints {
     public ResponseEntity<String> updateNews(@RequestBody UpdateNewsRequest updateNewsRequest,
                                              @PathVariable Long newsId)
             throws ResourceNotFoundException, IOException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrinciple user = (UserPrinciple) auth.getPrincipal();
+        updateNewsRequest.setUserId(user.getId());
         newsService.updateNews(updateNewsRequest, newsId);
         return ResponseEntity.ok().body("News details updated successfully");
     }
@@ -53,17 +59,19 @@ public class NewsEndpoints {
         return ResponseEntity.ok().body("News deleted successfully");
     }
 
-    @PostMapping("/set_trending/{newsId}")
+    @PostMapping("/updateTrending/{newsId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> setTrending(@Valid @PathVariable Long newsId){
         newsService.setTrending(newsId);
-        return ResponseEntity.ok().body("news set to trending");
+        return ResponseEntity.ok().body("News has been updated");
     }
 
-    @PostMapping("/reset_trending/{newsId}")
+    @PostMapping("/updatePublished/{newsId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> resetTrending(@Valid @PathVariable Long newsId){
-        newsService.resetTrending(newsId);
-        return ResponseEntity.ok().body("news reset to trending");
+    public ResponseEntity<String> setPublished(@Valid @PathVariable Long newsId){
+
+        newsService.publishNews(newsId);
+        return ResponseEntity.ok().body("News has been updated.");
     }
+
 }
