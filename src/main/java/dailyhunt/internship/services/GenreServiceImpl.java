@@ -14,6 +14,7 @@ import dailyhunt.internship.util.DailyhuntUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -24,13 +25,14 @@ import java.util.Optional;
 public class GenreServiceImpl implements GenreService {
 
     private final GenreRepository genreRepository;
-    private final WebClient.Builder webClientBuilder;
+//    private final WebClient.Builder webClientBuilder;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public GenreServiceImpl(GenreRepository genreRepository,
-                            WebClient.Builder webClientBuilder) {
+                            RestTemplate restTemplate) {
         this.genreRepository = genreRepository;
-        this.webClientBuilder = webClientBuilder;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -76,14 +78,17 @@ public class GenreServiceImpl implements GenreService {
                 .name(genre.getName())
                 .build();
         String fooResourceUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/injestion/user_profile/newsComponents/genre";
-        String result = webClientBuilder.build()
+    /*    String result = webClientBuilder.build()
                 .post()
                 .uri(fooResourceUrl)
                 .body(Mono.just(newsComponentsRequest), NewsComponentsRequest.class)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+    */
+        String result = restTemplate.postForObject(fooResourceUrl, newsComponentsRequest, String.class);
     }
+
 
     @Override
     public Optional<Genre> findGenreByName(String name) throws ResourceNotFoundException {
@@ -143,13 +148,14 @@ public class GenreServiceImpl implements GenreService {
                 .id(genre.getId())
                 .name(genre.getName())
                 .build();
-        String fooResourceUrl = "https://profile-service/api/v1/user_profile/newsComponents/genre";
-        String result = webClientBuilder.build()
+        String fooResourceUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/user_profile/newsComponents/genre";
+    /*    String result = webClientBuilder.build()
                 .delete()
                 .uri(fooResourceUrl+"/"+genreId)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+*/     restTemplate.delete(fooResourceUrl+"/"+genreId);
     }
 
     @Override

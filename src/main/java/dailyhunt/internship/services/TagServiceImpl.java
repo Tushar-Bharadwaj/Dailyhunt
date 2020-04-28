@@ -16,6 +16,7 @@ import dailyhunt.internship.util.DailyhuntUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -26,13 +27,14 @@ import java.util.Optional;
 public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
-    private final WebClient.Builder webClientBuilder;
+//    private final WebClient.Builder webClientBuilder;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public TagServiceImpl(TagRepository tagRepository,
-                          WebClient.Builder webClientBuilder) {
+                          RestTemplate restTemplate){
         this.tagRepository = tagRepository;
-        this.webClientBuilder = webClientBuilder;
+        this.restTemplate = restTemplate;
     }
 
 
@@ -79,13 +81,15 @@ public class TagServiceImpl implements TagService {
                 .build();
         String fooResourceUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/injestion/user_profile/newsComponents/tag";
 
-        String result = webClientBuilder.build()
+        /*String result = webClientBuilder.build()
                 .post()
                 .uri(fooResourceUrl)
                 .body(Mono.just(newsComponentsRequest), NewsComponentsRequest.class)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+        */
+         String result = restTemplate.postForObject(fooResourceUrl, newsComponentsRequest, String.class);
     }
 
     @Override
@@ -143,12 +147,15 @@ public class TagServiceImpl implements TagService {
 
         String fooResourceUrl = "http://profile-service/api/v1/user_profile/newsComponents/tag";
 
-        String result = webClientBuilder.build()
+    /*    String result = webClientBuilder.build()
                 .delete()
                 .uri(fooResourceUrl+"/"+tagId)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+
+     */
+        restTemplate.delete(fooResourceUrl+"/"+tagId);
     }
 
     @Override

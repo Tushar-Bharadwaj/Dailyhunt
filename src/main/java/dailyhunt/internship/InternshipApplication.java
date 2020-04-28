@@ -15,18 +15,18 @@ import org.springframework.web.reactive.function.client.WebClient;
 @EnableEurekaClient
 public class InternshipApplication {
 
-/*    @Bean
+    @Bean
     @LoadBalanced
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
-*/
-    @Bean
+
+/*    @Bean
     @LoadBalanced
     public WebClient.Builder getWebClientBuilder(){
         return WebClient.builder();
     }
-
+*/
     /*@Bean
     public AuthenticationManager getAuthenticationManager() {
         return new AuthenticationManager() {
