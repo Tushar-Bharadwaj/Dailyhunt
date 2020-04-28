@@ -123,7 +123,7 @@ public class LanguageServiceImpl implements LanguageService {
     public Boolean deleteLanguage(Long languageId) throws ResourceNotFoundException {
         Optional<Language> genre = languageRepository.findById(languageId);
         if(genre.isPresent()) {
-            deleteLanguageAtUserProfile(languageId);
+        //    deleteLanguageAtUserProfile(languageId);
             languageRepository.deleteById(languageId);
             return true;
         }

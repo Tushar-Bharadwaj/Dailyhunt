@@ -123,7 +123,7 @@ public class LocalityServiceImpl implements LocalityService {
     public Boolean deleteLocality(Long localityId) throws ResourceNotFoundException {
         Optional<Locality> locality = localityRepository.findById(localityId);
         if(locality.isPresent()) {
-            deleteLocalityAtUserProfile(localityId);
+        //    deleteLocalityAtUserProfile(localityId);
             localityRepository.deleteById(localityId);
             return true;
         }

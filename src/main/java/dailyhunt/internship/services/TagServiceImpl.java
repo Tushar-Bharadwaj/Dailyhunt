@@ -131,7 +131,7 @@ public class TagServiceImpl implements TagService {
     public Boolean deleteTags(Long tagsId) throws ResourceNotFoundException {
         Optional<Tag> tags = tagRepository.findById(tagsId);
         if(tags.isPresent()) {
-            deleteTagAtUserProfile(tagsId);
+        //    deleteTagAtUserProfile(tagsId);
             tagRepository.deleteById(tagsId);
             return true;
         }
