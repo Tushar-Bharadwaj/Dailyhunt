@@ -75,7 +75,7 @@ public class GenreServiceImpl implements GenreService {
                 .id(genre.getId())
                 .name(genre.getName())
                 .build();
-        String fooResourceUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/user_profile/newsComponents/genre";
+        String fooResourceUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/injestion/user_profile/newsComponents/genre";
         String result = webClientBuilder.build()
                 .post()
                 .uri(fooResourceUrl)

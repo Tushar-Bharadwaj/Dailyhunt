@@ -77,7 +77,7 @@ public class TagServiceImpl implements TagService {
                 .id(tag.getId())
                 .name(tag.getName())
                 .build();
-        String fooResourceUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/user_profile/newsComponents/tag";
+        String fooResourceUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/injestion/user_profile/newsComponents/tag";
 
         String result = webClientBuilder.build()
                 .post()
