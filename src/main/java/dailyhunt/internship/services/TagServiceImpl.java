@@ -145,7 +145,7 @@ public class TagServiceImpl implements TagService {
                 .name(tag.getName())
                 .build();
 
-        String fooResourceUrl = "http://profile-service/api/v1/injestion/user_profile/newsComponents/tag";
+        String fooResourceUrl = "http://dailyhunt-user-profile.herokuapp.com/api/v1/injestion/user_profile/newsComponents/tag";
 
         String result = webClientBuilder.build()
                 .delete()

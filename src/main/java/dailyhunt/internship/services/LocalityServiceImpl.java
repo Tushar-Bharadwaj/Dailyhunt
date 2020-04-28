@@ -136,7 +136,7 @@ public class LocalityServiceImpl implements LocalityService {
                 .id(locality.getId())
                 .name(locality.getName())
                 .build();
-        String fooResourceUrl = "http://profile-service/api/v1/injestion/user_profile/newsComponents/locality";
+        String fooResourceUrl = "http://dailyhunt-user-profile.herokuapp.com/api/v1/injestion/user_profile/newsComponents/locality";
         String result = webClientBuilder.build()
                 .delete()
                 .uri(fooResourceUrl+"/"+localityId)

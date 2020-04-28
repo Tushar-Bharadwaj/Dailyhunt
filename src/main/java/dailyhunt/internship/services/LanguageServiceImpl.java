@@ -136,7 +136,7 @@ public class LanguageServiceImpl implements LanguageService {
                 .id(language.getId())
                 .name(language.getName())
                 .build();
-        String fooResourceUrl = "http://profile-service/api/v1/injestion/user_profile/newsComponents/language";
+        String fooResourceUrl = "http://dailyhunt-user-profile.herokuapp.com/api/v1/injestion/user_profile/newsComponents/language";
         String result = webClientBuilder.build()
                 .delete()
                 .uri(fooResourceUrl+"/"+languageId)
