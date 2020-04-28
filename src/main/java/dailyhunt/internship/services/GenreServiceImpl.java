@@ -25,14 +25,14 @@ import java.util.Optional;
 public class GenreServiceImpl implements GenreService {
 
     private final GenreRepository genreRepository;
-//    private final WebClient.Builder webClientBuilder;
-    private final RestTemplate restTemplate;
+    private final WebClient.Builder webClientBuilder;
+//    private final RestTemplate restTemplate;
 
     @Autowired
     public GenreServiceImpl(GenreRepository genreRepository,
-                            RestTemplate restTemplate) {
+                            WebClient.Builder webClientBuilder) {
         this.genreRepository = genreRepository;
-        this.restTemplate = restTemplate;
+        this.webClientBuilder = webClientBuilder;
     }
 
     @Override
@@ -78,15 +78,15 @@ public class GenreServiceImpl implements GenreService {
                 .name(genre.getName())
                 .build();
         String fooResourceUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/injestion/user_profile/newsComponents/genre";
-    /*    String result = webClientBuilder.build()
+        String result = webClientBuilder.build()
                 .post()
                 .uri(fooResourceUrl)
                 .body(Mono.just(newsComponentsRequest), NewsComponentsRequest.class)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-    */
-        String result = restTemplate.postForObject(fooResourceUrl, newsComponentsRequest, String.class);
+
+//        String result = restTemplate.postForObject(fooResourceUrl, newsComponentsRequest, String.class);
     }
 
 
@@ -148,14 +148,14 @@ public class GenreServiceImpl implements GenreService {
                 .id(genre.getId())
                 .name(genre.getName())
                 .build();
-        String fooResourceUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/user_profile/newsComponents/genre";
-    /*    String result = webClientBuilder.build()
+        String fooResourceUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/injestion/user_profile/newsComponents/genre";
+        String result = webClientBuilder.build()
                 .delete()
                 .uri(fooResourceUrl+"/"+genreId)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-*/     restTemplate.delete(fooResourceUrl+"/"+genreId);
+//     restTemplate.delete(fooResourceUrl+"/"+genreId);
     }
 
     @Override

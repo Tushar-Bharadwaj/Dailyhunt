@@ -25,14 +25,14 @@ import java.util.Optional;
 public class LanguageServiceImpl implements LanguageService {
 
     private final LanguageRepository languageRepository;
-//    private final WebClient.Builder webClientBuilder;
-    private final RestTemplate restTemplate;
+    private final WebClient.Builder webClientBuilder;
+//    private final RestTemplate restTemplate;
 
     @Autowired
     public LanguageServiceImpl(LanguageRepository languageRepository,
-                               RestTemplate restTemplate) {
+                               WebClient.Builder webClientBuilder) {
         this.languageRepository = languageRepository;
-        this.restTemplate = restTemplate;
+        this.webClientBuilder = webClientBuilder;
     }
 
     @Override
@@ -78,14 +78,14 @@ public class LanguageServiceImpl implements LanguageService {
                 .name(language.getName())
                 .build();
         String fooResourceUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/injestion/user_profile/newsComponents/language";
-        /*String result = webClientBuilder.build()
+        String result = webClientBuilder.build()
                 .post()
                 .uri(fooResourceUrl)
                 .body(Mono.just(newsComponentsRequest), NewsComponentsRequest.class)
                 .retrieve()
                 .bodyToMono(String.class)
-                .block();*/
-        String result = restTemplate.postForObject(fooResourceUrl, newsComponentsRequest, String.class);
+                .block();
+    //    String result = restTemplate.postForObject(fooResourceUrl, newsComponentsRequest, String.class);
     }
 
     @Override
@@ -136,14 +136,14 @@ public class LanguageServiceImpl implements LanguageService {
                 .id(language.getId())
                 .name(language.getName())
                 .build();
-        String fooResourceUrl = "http://profile-service/api/v1/user_profile/newsComponents/language";
-        /*String result = webClientBuilder.build()
+        String fooResourceUrl = "http://profile-service/api/v1/injestion/user_profile/newsComponents/language";
+        String result = webClientBuilder.build()
                 .delete()
                 .uri(fooResourceUrl+"/"+languageId)
                 .retrieve()
                 .bodyToMono(String.class)
-                .block();*/
-        restTemplate.delete(fooResourceUrl+"/"+languageId);
+                .block();
+    //    restTemplate.delete(fooResourceUrl+"/"+languageId);
     }
 
     @Override

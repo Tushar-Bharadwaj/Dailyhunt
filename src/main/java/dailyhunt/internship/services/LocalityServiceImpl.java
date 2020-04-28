@@ -27,14 +27,14 @@ import java.util.Optional;
 public class LocalityServiceImpl implements LocalityService {
 
     private final LocalityRepository localityRepository;
-//    private  final WebClient.Builder webClientBuilder;
-    private final RestTemplate restTemplate;
+    private  final WebClient.Builder webClientBuilder;
+//    private final RestTemplate restTemplate;
 
     @Autowired
     public LocalityServiceImpl(LocalityRepository localityRepository,
-                               RestTemplate restTemplate) {
+                               WebClient.Builder webClientBuilder) {
         this.localityRepository = localityRepository;
-        this.restTemplate = restTemplate;
+        this.webClientBuilder = webClientBuilder;
     }
 
     @Override
@@ -80,14 +80,14 @@ public class LocalityServiceImpl implements LocalityService {
                 .name(locality.getName())
                 .build();
         String fooResourceUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/injestion/user_profile/newsComponents/locality";
-        /*String result = webClientBuilder.build()
+        String result = webClientBuilder.build()
                 .post()
                 .uri(fooResourceUrl)
                 .body(Mono.just(newsComponentsRequest), NewsComponentsRequest.class)
                 .retrieve()
                 .bodyToMono(String.class)
-                .block();*/
-        String result = restTemplate.postForObject(fooResourceUrl, newsComponentsRequest, String.class);
+                .block();
+    //    String result = restTemplate.postForObject(fooResourceUrl, newsComponentsRequest, String.class);
     }
 
     @Override
@@ -136,14 +136,14 @@ public class LocalityServiceImpl implements LocalityService {
                 .id(locality.getId())
                 .name(locality.getName())
                 .build();
-        String fooResourceUrl = "http://profile-service/api/v1/user_profile/newsComponents/locality";
-        /*String result = webClientBuilder.build()
+        String fooResourceUrl = "http://profile-service/api/v1/injestion/user_profile/newsComponents/locality";
+        String result = webClientBuilder.build()
                 .delete()
                 .uri(fooResourceUrl+"/"+localityId)
                 .retrieve()
                 .bodyToMono(String.class)
-                .block();*/
-        restTemplate.delete(fooResourceUrl+"/"+localityId);
+                .block();
+    //    restTemplate.delete(fooResourceUrl+"/"+localityId);
     }
 
     @Override
