@@ -134,7 +134,7 @@ public class GenreServiceImpl implements GenreService {
     public Boolean deleteGenre(Long genreId) throws ResourceNotFoundException {
         Optional<Genre> genre = genreRepository.findById(genreId);
         if(genre.isPresent()) {
-        //    deleteGenreAtUserProfile(genreId);
+            deleteGenreAtUserProfile(genreId);
             genreRepository.deleteById(genreId);
             return true;
         }
