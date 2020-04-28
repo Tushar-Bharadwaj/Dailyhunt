@@ -143,7 +143,7 @@ public class GenreServiceImpl implements GenreService {
                 .id(genre.getId())
                 .name(genre.getName())
                 .build();
-        String fooResourceUrl = "http://profile-service/api/v1/user_profile/newsComponents/genre";
+        String fooResourceUrl = "https://profile-service/api/v1/user_profile/newsComponents/genre";
         String result = webClientBuilder.build()
                 .delete()
                 .uri(fooResourceUrl+"/"+genreId)

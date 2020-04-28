@@ -75,7 +75,7 @@ public class LanguageServiceImpl implements LanguageService {
                 .id(language.getId())
                 .name(language.getName())
                 .build();
-        String fooResourceUrl = "http://profile-service/api/v1/user_profile/newsComponents/language";
+        String fooResourceUrl = "https://profile-service/api/v1/user_profile/newsComponents/language";
         String result = webClientBuilder.build()
                 .post()
                 .uri(fooResourceUrl)

@@ -77,7 +77,7 @@ public class TagServiceImpl implements TagService {
                 .id(tag.getId())
                 .name(tag.getName())
                 .build();
-        String fooResourceUrl = "http://profile-service/api/v1/user_profile/newsComponents/tag";
+        String fooResourceUrl = "https://profile-service/api/v1/user_profile/newsComponents/tag";
 
         String result = webClientBuilder.build()
                 .post()

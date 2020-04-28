@@ -77,7 +77,7 @@ public class LocalityServiceImpl implements LocalityService {
                 .id(locality.getId())
                 .name(locality.getName())
                 .build();
-        String fooResourceUrl = "http://profile-service/api/v1/user_profile/newsComponents/locality";
+        String fooResourceUrl = "https://profile-service/api/v1/user_profile/newsComponents/locality";
         String result = webClientBuilder.build()
                 .post()
                 .uri(fooResourceUrl)
