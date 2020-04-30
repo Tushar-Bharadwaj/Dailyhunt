@@ -3,6 +3,8 @@ package dailyhunt.internship.services;
 import dailyhunt.internship.clientmodels.request.NewsComponents;
 import dailyhunt.internship.clientmodels.request.NewsRequest;
 import dailyhunt.internship.clientmodels.request.UpdateNewsRequest;
+import dailyhunt.internship.clientmodels.response.NewsComponentsRequest;
+import dailyhunt.internship.clientmodels.response.RecoNews;
 import dailyhunt.internship.entities.News;
 import dailyhunt.internship.entities.User;
 import dailyhunt.internship.entities.newscomponents.Genre;
@@ -15,27 +17,34 @@ import dailyhunt.internship.repositories.NewsRepository;
 import dailyhunt.internship.services.interfaces.*;
 import dailyhunt.internship.util.DailyhuntUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class NewsServiceImpl implements NewsService {
 
     private static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads/";
-    private NewsRepository newsRepository;
-    private TagService tagService;
-    private GenreService genreService;
-    private LocalityService localityService;
-    private LanguageService languageService;
-    private UserService userService;
-    private ImageService imageService;
+    private final NewsRepository newsRepository;
+    private final TagService tagService;
+    private final GenreService genreService;
+    private final LocalityService localityService;
+    private final LanguageService languageService;
+    private final UserService userService;
+    private final ImageService imageService;
+
+    private final WebClient.Builder webClientBuilder;
 
     @Autowired
     public NewsServiceImpl(NewsRepository newsRepository, TagService tagService,
                            GenreService genreService, LocalityService localityService, LanguageService languageService,
-                           UserService userService, ImageService imageService) {
+                           UserService userService, ImageService imageService,
+                           WebClient.Builder webClientBuilder) {
         this.newsRepository = newsRepository;
         this.tagService = tagService;
         this.genreService = genreService;
@@ -43,6 +52,8 @@ public class NewsServiceImpl implements NewsService {
         this.languageService = languageService;
         this.userService = userService;
         this.imageService = imageService;
+
+        this.webClientBuilder = webClientBuilder;
 
     }
 
@@ -170,11 +181,47 @@ public class NewsServiceImpl implements NewsService {
         Optional<News> news = newsRepository.findById(newsId);
         if(news.isPresent()) {
             News currentNews = news.get();
+            if(currentNews.getPublished())
+                deleteAtRecoService(currentNews);
+            else
+                publishAtRecoService(currentNews);
             currentNews.setPublished(!currentNews.getPublished());
             newsRepository.save(currentNews);
         }
         else
             throw new ResourceNotFoundException("invalid news");
+    }
+
+    public void publishAtRecoService(News news) {
+        RecoNews recoNews = RecoNews.builder()
+                .id(news.getId())
+                .genreIds(news.getGenres().stream().map(genre -> genre.getId()).collect(Collectors.toSet()))
+                .languageIds(news.getLanguage().stream().map(language -> language.getId()).collect(Collectors.toSet()))
+                .localityIds(news.getLocalities().stream().map(locality -> locality.getId()).collect(Collectors.toSet()))
+                .tagIds(news.getTags().stream().map(tag -> tag.getId()).collect(Collectors.toSet()))
+                .thumbnailPath(news.getImagePath())
+                .title(news.getTitle())
+                .trending(news.getTrending())
+                .build();
+
+        String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/card/publish";
+        String result = webClientBuilder.build()
+                .post()
+                .uri(recoUrl)
+                .body(Mono.just(recoNews), RecoNews.class)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
+
+    public void deleteAtRecoService(News news) {
+        String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/card/delete";
+        String result = webClientBuilder.build()
+                .delete()
+                .uri(recoUrl+"/"+news.getId())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 
     @Override

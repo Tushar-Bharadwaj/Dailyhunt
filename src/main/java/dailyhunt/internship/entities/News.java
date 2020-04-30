@@ -1,6 +1,5 @@
 package dailyhunt.internship.entities;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dailyhunt.internship.entities.newscomponents.Genre;
 import dailyhunt.internship.entities.newscomponents.Language;

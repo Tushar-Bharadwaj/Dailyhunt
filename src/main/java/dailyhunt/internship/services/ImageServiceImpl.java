@@ -38,7 +38,7 @@ public class ImageServiceImpl implements ImageService {
 
 
 //        RestTemplate restTemplate = new RestTemplate();
-        String fooResourceUrl = "https://dailyhunt-image-server.herokuapp.com/uploadFile";
+        String fooResourceUrl = "https://dailyhunt-image-server.herokuapp.com/image/uploadFile";
 //        String fooResourceUrl = "http://image-service/image/uploadFile";
         ImageDTO imageDTO = ImageDTO.builder().base64(base_64_string).build();
 
