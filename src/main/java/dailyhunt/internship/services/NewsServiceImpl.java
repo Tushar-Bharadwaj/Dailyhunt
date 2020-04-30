@@ -93,18 +93,10 @@ public class NewsServiceImpl implements NewsService {
         }
 
         //Updating the post counts of tags, localities, languages and genres
-        tags.forEach(tag -> {
-            tagService.incrementTagPostCount(tag);
-        });
-        localities.forEach(locality -> {
-            localityService.incrementLocalityPostCount(locality);
-        });
-        languages.forEach(language -> {
-            languageService.incrementLanguagePostCount(language);
-        });
-        genres.forEach(genre -> {
-            genreService.incrementGenrePostCount(genre);
-        });
+        tags.forEach(tagService::incrementTagPostCount);
+        localities.forEach(localityService::incrementLocalityPostCount);
+        languages.forEach(languageService::incrementLanguagePostCount);
+        genres.forEach(genreService::incrementGenrePostCount);
 
 
 
@@ -226,6 +218,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public void deleteNews(Long newsId) throws ResourceNotFoundException {
+        News news = newsRepository.findById(newsId).get();
+        if(news.getPublished())
+            deleteAtRecoService(newsRepository.findById(newsId).get());
         newsRepository.deleteById(newsId);
     }
 
@@ -236,10 +231,22 @@ public class NewsServiceImpl implements NewsService {
         if(news.isPresent()) {
             News currentNews = news.get();
             currentNews.setTrending(!currentNews.getTrending());
+            if(currentNews.getPublished())
+                updateTredningAtRecoService(currentNews);
             newsRepository.save(currentNews);
         }
         else
             throw new ResourceNotFoundException("invalid news");
+    }
+
+    public void updateTredningAtRecoService(News news) {
+        String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/card/updateTrending";
+        String result = webClientBuilder.build()
+                .put()
+                .uri(recoUrl+"/"+news.getId())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 
     @Override
