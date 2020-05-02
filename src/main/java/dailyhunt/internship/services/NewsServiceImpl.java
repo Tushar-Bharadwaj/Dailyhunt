@@ -191,7 +191,7 @@ public class NewsServiceImpl implements NewsService {
                 .languageIds(news.getLanguage().stream().map(language -> language.getId()).collect(Collectors.toSet()))
                 .localityIds(news.getLocalities().stream().map(locality -> locality.getId()).collect(Collectors.toSet()))
                 .tagIds(news.getTags().stream().map(tag -> tag.getId()).collect(Collectors.toSet()))
-                .thumbnailPath(news.getImagePath())
+                .thumbnailPath(news.getImagePath().replaceFirst("images", "thumbnails"))
                 .title(news.getTitle())
                 .trending(news.getTrending())
                 .build();
