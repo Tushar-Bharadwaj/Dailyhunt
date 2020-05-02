@@ -2,6 +2,7 @@ package dailyhunt.internship.endpoints;
 
 import dailyhunt.internship.clientmodels.request.NewsRequest;
 import dailyhunt.internship.clientmodels.request.UpdateNewsRequest;
+import dailyhunt.internship.clientmodels.response.CardNews;
 import dailyhunt.internship.entities.News;
 import dailyhunt.internship.exceptions.ResourceNotFoundException;
 import dailyhunt.internship.security.services.UserPrinciple;
@@ -22,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping(NewsEndpoints.BASE_URL)
 public class NewsEndpoints {
-    static final String BASE_URL = "/api/v1/news";
+    static final String BASE_URL = "/api/v1/auth/news";
     private final NewsService newsService;
 
     @Autowired
@@ -33,6 +34,11 @@ public class NewsEndpoints {
     @GetMapping
     List<News> getAllNews() {
         return newsService.findAllNews();
+    }
+
+    @GetMapping("/{newsId}")
+    ResponseEntity<CardNews> getCardNews(@PathVariable Long newsId) {
+        return ResponseEntity.ok().body(newsService.findCardNewsById(newsId));
     }
 
     @PostMapping

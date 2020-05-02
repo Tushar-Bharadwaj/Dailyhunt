@@ -2,6 +2,7 @@ package dailyhunt.internship.services.interfaces;
 
 import dailyhunt.internship.clientmodels.request.NewsRequest;
 import dailyhunt.internship.clientmodels.request.UpdateNewsRequest;
+import dailyhunt.internship.clientmodels.response.CardNews;
 import dailyhunt.internship.entities.News;
 import dailyhunt.internship.exceptions.ResourceNotFoundException;
 
@@ -9,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface NewsService {
-    News findNewsById(Long id);
+    CardNews findCardNewsById(Long id);
 
     List<News> findAllNews();
 

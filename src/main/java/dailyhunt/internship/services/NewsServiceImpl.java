@@ -3,6 +3,7 @@ package dailyhunt.internship.services;
 import dailyhunt.internship.clientmodels.request.NewsComponents;
 import dailyhunt.internship.clientmodels.request.NewsRequest;
 import dailyhunt.internship.clientmodels.request.UpdateNewsRequest;
+import dailyhunt.internship.clientmodels.response.CardNews;
 import dailyhunt.internship.clientmodels.response.NewsComponentsRequest;
 import dailyhunt.internship.clientmodels.response.RecoNews;
 import dailyhunt.internship.entities.News;
@@ -58,11 +59,18 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public News findNewsById(Long id) {
-        Optional<News> locality = newsRepository.findById(id);
-        if(!locality.isPresent())
-            throw new ResourceNotFoundException("This Locality does not exist");
-        return locality.get();
+    public CardNews findCardNewsById(Long id) {
+        Optional<News> optionalNews = newsRepository.findById(id);
+        if(!optionalNews.isPresent())
+            throw new ResourceNotFoundException("This news does not exist");
+        News news = optionalNews.get();
+        return CardNews.builder()
+                .id(news.getId())
+                .title(news.getTitle())
+                .shortText(news.getShortText())
+                .text(news.getText())
+                .imagePath(news.getImagePath())
+                .build();
     }
 
     @Override
