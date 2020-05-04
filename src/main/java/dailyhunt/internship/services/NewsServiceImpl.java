@@ -1,10 +1,8 @@
 package dailyhunt.internship.services;
 
-import dailyhunt.internship.clientmodels.request.NewsComponents;
 import dailyhunt.internship.clientmodels.request.NewsRequest;
 import dailyhunt.internship.clientmodels.request.UpdateNewsRequest;
-import dailyhunt.internship.clientmodels.response.CardNews;
-import dailyhunt.internship.clientmodels.response.NewsComponentsRequest;
+import dailyhunt.internship.clientmodels.response.Article;
 import dailyhunt.internship.clientmodels.response.RecoNews;
 import dailyhunt.internship.entities.News;
 import dailyhunt.internship.entities.User;
@@ -18,7 +16,6 @@ import dailyhunt.internship.repositories.NewsRepository;
 import dailyhunt.internship.services.interfaces.*;
 import dailyhunt.internship.util.DailyhuntUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -59,12 +56,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public CardNews findCardNewsById(Long id) {
+    public Article findCardNewsById(Long id) {
         Optional<News> optionalNews = newsRepository.findById(id);
         if(!optionalNews.isPresent())
             throw new ResourceNotFoundException("This news does not exist");
         News news = optionalNews.get();
-        return CardNews.builder()
+        return Article.builder()
                 .id(news.getId())
                 .title(news.getTitle())
                 .shortText(news.getShortText())

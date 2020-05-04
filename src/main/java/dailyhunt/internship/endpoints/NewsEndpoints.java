@@ -2,7 +2,7 @@ package dailyhunt.internship.endpoints;
 
 import dailyhunt.internship.clientmodels.request.NewsRequest;
 import dailyhunt.internship.clientmodels.request.UpdateNewsRequest;
-import dailyhunt.internship.clientmodels.response.CardNews;
+import dailyhunt.internship.clientmodels.response.Article;
 import dailyhunt.internship.entities.News;
 import dailyhunt.internship.exceptions.ResourceNotFoundException;
 import dailyhunt.internship.security.services.UserPrinciple;
@@ -37,7 +37,7 @@ public class NewsEndpoints {
     }
 
     @GetMapping("/{newsId}")
-    ResponseEntity<CardNews> getCardNews(@PathVariable Long newsId) {
+    ResponseEntity<Article> getCardNews(@PathVariable Long newsId) {
         return ResponseEntity.ok().body(newsService.findCardNewsById(newsId));
     }
 
