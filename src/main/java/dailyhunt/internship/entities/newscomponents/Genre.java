@@ -21,4 +21,7 @@ public class Genre {
     private String name;
     private Long postCount;
     private Boolean active;
+
+    @Column(columnDefinition = "boolean default false")
+    private Boolean generic;
 }

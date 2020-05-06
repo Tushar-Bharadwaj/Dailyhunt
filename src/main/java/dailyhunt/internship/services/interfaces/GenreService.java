@@ -35,4 +35,6 @@ public interface GenreService {
     Boolean deleteGenre(Long genreId);
 
     List<Genre> findAllById(List<Long> ids);
+
+    Genre updateGenreGeneric(Long genreId);
 }

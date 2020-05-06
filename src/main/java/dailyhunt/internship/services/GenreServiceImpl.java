@@ -162,4 +162,26 @@ public class GenreServiceImpl implements GenreService {
     public List<Genre> findAllById(List<Long> ids) {
         return genreRepository.findAllById(ids);
     }
+
+    @Override
+    public Genre updateGenreGeneric(Long genreId) {
+        Optional<Genre> checkGenre = findGenreById(genreId);
+        if(checkGenre.isPresent()) {
+            Genre genre = checkGenre.get();
+            genre.setGeneric(!genre.getGeneric());
+            updateGenericAtUserProfile(genreId);
+            return genreRepository.save(genre);
+        }
+        throw new ResourceNotFoundException("Invalid genre selected");
+    }
+
+    public void updateGenericAtUserProfile(Long genreId) {
+        String recoUrl = "https://dailyhunt-user-profile.herokuapp.com/api/v1/injestion/user_profile/newsComponents/genre";
+        String result = webClientBuilder.build()
+                .put()
+                .uri(recoUrl+"/"+genreId)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
 }

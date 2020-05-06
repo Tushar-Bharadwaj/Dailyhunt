@@ -79,4 +79,12 @@ public class GenreEndpoints {
         return genreService.deleteGenre(genreId);
 
     }
+
+    @PutMapping("/gereric/{genreId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> updateGenreGeneric(@PathVariable Long genreId) throws ResourceNotFoundException {
+        genreService.updateGenreGeneric(genreId);
+        return ResponseEntity.ok().body("genre generic updated");
+    }
 }
