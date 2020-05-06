@@ -80,7 +80,7 @@ public class GenreEndpoints {
 
     }
 
-    @PutMapping("/gereric/{genreId}")
+    @PutMapping("/generic/{genreId}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> updateGenreGeneric(@PathVariable Long genreId) throws ResourceNotFoundException {
