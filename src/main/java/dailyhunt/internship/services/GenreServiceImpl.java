@@ -138,7 +138,9 @@ public class GenreServiceImpl implements GenreService {
             genreRepository.deleteById(genreId);
             return true;
         }
-        throw new ResourceNotFoundException("Invalid genre selected");
+        else {
+            throw new ResourceNotFoundException("Invalid genre selected");
+        }
     }
 
     public void deleteGenreAtUserProfile(Long genreId) {

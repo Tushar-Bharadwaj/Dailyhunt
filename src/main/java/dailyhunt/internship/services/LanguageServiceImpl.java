@@ -127,7 +127,8 @@ public class LanguageServiceImpl implements LanguageService {
             languageRepository.deleteById(languageId);
             return true;
         }
-        throw new ResourceNotFoundException("Invalid Language selected");
+        else
+            throw new ResourceNotFoundException("Invalid Language selected");
     }
 
     public void deleteLanguageAtUserProfile(Long languageId) {

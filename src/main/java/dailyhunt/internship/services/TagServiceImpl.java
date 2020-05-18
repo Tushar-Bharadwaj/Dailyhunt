@@ -135,7 +135,8 @@ public class TagServiceImpl implements TagService {
             tagRepository.deleteById(tagsId);
             return true;
         }
-        throw new ResourceNotFoundException("Invalid tags selected");
+        else
+            throw new ResourceNotFoundException("Invalid tags selected");
     }
 
     public void deleteTagAtUserProfile(Long tagId) {

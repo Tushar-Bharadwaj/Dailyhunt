@@ -74,11 +74,12 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public void delete(Long id) throws ResourceNotFoundException {
         Optional<Source> source = sourceRepository.findById(id);
-        if(source.isPresent()) {
+        if (source.isPresent()) {
             deleteSourceAtUserProfile(id);
             sourceRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException("Invalid source selected");
         }
-        throw new ResourceNotFoundException("Invalid source selected");
     }
 
     public void deleteSourceAtUserProfile(Long id) {

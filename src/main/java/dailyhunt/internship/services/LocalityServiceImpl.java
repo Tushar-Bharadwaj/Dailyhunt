@@ -127,7 +127,8 @@ public class LocalityServiceImpl implements LocalityService {
             localityRepository.deleteById(localityId);
             return true;
         }
-        throw new ResourceNotFoundException("Invalid locality selected");
+        else
+            throw new ResourceNotFoundException("Invalid locality selected");
     }
 
     public void deleteLocalityAtUserProfile(Long localityId) {
