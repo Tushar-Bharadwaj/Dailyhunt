@@ -29,6 +29,11 @@ public class News {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "source_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Source source;
+
     @Column(columnDefinition="TEXT")
     private String title;
 

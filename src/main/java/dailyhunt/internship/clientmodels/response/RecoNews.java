@@ -1,5 +1,6 @@
 package dailyhunt.internship.clientmodels.response;
 
+import dailyhunt.internship.entities.Source;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,8 @@ public class RecoNews {
 
     @NotNull
     private Long id;
+
+    private Source source;
 
     @NotBlank
     private String title;

@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 public class NewsRequest {
@@ -13,6 +14,8 @@ public class NewsRequest {
     private Long id;
   */
     private Long userId;
+
+    private Optional<Long> sourceId;
 
     @NotBlank(message = "Title is required")
     private String title;

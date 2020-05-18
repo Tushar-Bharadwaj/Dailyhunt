@@ -43,6 +43,17 @@ public class SourceServiceImpl implements SourceService {
     }
 
     @Override
+    public Source findBySourceId(Long id) throws ResourceNotFoundException {
+        Optional<Source> optionalSource = sourceRepository.findById(id);
+        if(optionalSource.isPresent()) {
+            return optionalSource.get();
+        }
+        else {
+            throw new ResourceNotFoundException("This source does not exist");
+        }
+    }
+
+    @Override
     public Source save(SourceDTO sourceDTO) throws IOException {
         if(sourceRepository.existsByName(sourceDTO.getName()))
             throw new BadRequestException("There already exists a Source with same name");

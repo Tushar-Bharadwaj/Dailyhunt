@@ -5,6 +5,7 @@ import dailyhunt.internship.clientmodels.request.UpdateNewsRequest;
 import dailyhunt.internship.clientmodels.response.Article;
 import dailyhunt.internship.clientmodels.response.RecoNews;
 import dailyhunt.internship.entities.News;
+import dailyhunt.internship.entities.Source;
 import dailyhunt.internship.entities.User;
 import dailyhunt.internship.entities.newscomponents.Genre;
 import dailyhunt.internship.entities.newscomponents.Language;
@@ -35,6 +36,7 @@ public class NewsServiceImpl implements NewsService {
     private final LanguageService languageService;
     private final UserService userService;
     private final ImageService imageService;
+    private final SourceService sourceService;
 
     private final WebClient.Builder webClientBuilder;
 
@@ -42,7 +44,7 @@ public class NewsServiceImpl implements NewsService {
     public NewsServiceImpl(NewsRepository newsRepository, TagService tagService,
                            GenreService genreService, LocalityService localityService, LanguageService languageService,
                            UserService userService, ImageService imageService,
-                           WebClient.Builder webClientBuilder) {
+                           WebClient.Builder webClientBuilder, SourceService sourceService) {
         this.newsRepository = newsRepository;
         this.tagService = tagService;
         this.genreService = genreService;
@@ -52,6 +54,7 @@ public class NewsServiceImpl implements NewsService {
         this.imageService = imageService;
 
         this.webClientBuilder = webClientBuilder;
+        this.sourceService = sourceService;
 
     }
 
@@ -91,6 +94,13 @@ public class NewsServiceImpl implements NewsService {
         List<Language> languages = languageService.findAllById(newsRequest.getLanguageIds());
         List<Genre> genres = genreService.findAllById(newsRequest.getGenreIds());
         User user = userService.findUserById(newsRequest.getUserId());
+        Source source;
+        if(newsRequest.getSourceId().isPresent()){
+            source = sourceService.findBySourceId(newsRequest.getSourceId().get());
+        }
+        else {
+            source = null;
+        }
 
         if(languages.isEmpty() || genres.isEmpty() || localities.isEmpty()
                 || DailyhuntUtil.isNullOrEmpty(user)) {
@@ -118,6 +128,7 @@ public class NewsServiceImpl implements NewsService {
                 .text(newsRequest.getText())
                 .updatedAt(new Date())
                 .user(user)
+                .source(source)
                 .trending(false)
                 .build();
 
@@ -192,6 +203,7 @@ public class NewsServiceImpl implements NewsService {
     public void publishAtRecoService(News news) {
         RecoNews recoNews = RecoNews.builder()
                 .id(news.getId())
+                .source(news.getSource())
                 .genreIds(news.getGenres().stream().map(genre -> genre.getId()).collect(Collectors.toSet()))
                 .languageIds(news.getLanguage().stream().map(language -> language.getId()).collect(Collectors.toSet()))
                 .localityIds(news.getLocalities().stream().map(locality -> locality.getId()).collect(Collectors.toSet()))

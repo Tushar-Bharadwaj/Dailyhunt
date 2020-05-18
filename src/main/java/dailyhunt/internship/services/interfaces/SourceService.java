@@ -11,6 +11,8 @@ public interface SourceService {
 
     AllSources getAllSources();
 
+    Source findBySourceId(Long id) throws ResourceNotFoundException;
+
     Source save(SourceDTO sourceDTO) throws IOException;
 
     void saveSourceAtUserProfile(Source source);
